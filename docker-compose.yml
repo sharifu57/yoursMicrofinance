@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+  backend:
+    restart: "always"
+    build: .
+    environment:
+      IP: 127.0.0.1
+    volumes:
+      - .:/yours
+    command: bash -c "python manage.py runserver 0.0.0.0:5000"
+    container_name: yours
+    image: yours
+    ports:
+      - "5000:5000"
+    networks:
+      - webnet
+networks:
+  webnet:
