@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,8 +25,22 @@ SECRET_KEY = 'django-insecure-=g8kig(!h6*!345pyx(b+ylo3f2pp=^a4en0r%i^o+p#zyd^)_
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+ALLOWED_HOSTS = ['*']
+PRODUCTION = False
 
-ALLOWED_HOSTS = []
+if PRODUCTION:
+    HOST_IP = '192.168.0.60'
+    HOST_ADDR = f"http://{HOST_IP}:5000"
+    STATE_INDEX = 1
+
+else:
+    HOST_IP = '192.168.137.1'
+    HOST_ADDR = f"http://{HOST_IP}:5000"
+    STATE_INDEX = 0
+
+STATES = ["uat", "production"]
+SYSTEM_STATE = STATES[STATE_INDEX]
+
 
 
 # Application definition
@@ -37,6 +52,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'backend'
 ]
 
 MIDDLEWARE = [
@@ -73,10 +89,21 @@ WSGI_APPLICATION = 'yours.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'yours',
+        'USER': 'yours',
+        'PASSWORD': 'qazplm741',
+        'HOST': HOST_IP,
+        'PORT': '5432',
     }
 }
 
@@ -115,7 +142,17 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL='/static/'
+MEDIA_URL = '/media/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
+
+if DEBUG:
+    MEDIA_ROOT = os.path.join(os.path.dirname(__file__), '..','backend/static').replace('\\', '/')
+else:
+    MEDIA_ROOT = os.path.join(os.path.dirname(__file__), 'static').replace('\\', '/')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
