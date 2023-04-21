@@ -1,4 +1,9 @@
 from django.db import models
+from django.contrib.auth.models import Group, User
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.fields import GenericRelation
+from django.conf import settings
 
 # Create your models here.
 class MainModel(models.Model):
@@ -22,15 +27,16 @@ NATURE_OF_ACTIVITY = (
 )
     
 class Borrower(MainModel):
-    customer_Id = models.CharField(max_length=200, null=True, blank=True)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    identity = models.CharField(max_length=200, null=True, blank=True)
     fist_name = models.CharField(max_length=200, null=True, blank=True)
     middle_name = models.CharField(max_length=200, null=True, blank=True)
     last_name = models.CharField(max_length=200, null=True, blank=True)
     phone = models.CharField(max_length=20, null=True, blank=True)
     email = models.EmailField(max_length=200, null=True, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
-    nida_number = models.CharField(null=True, blank=True)
-    address = models.CharField(null=True, blank=True)
+    nida_number = models.CharField(null=True, blank=True, max_length=20)
+    address = models.CharField(null=True, blank=True, max_length=200)
     nature_of_employment = models.IntegerField(default=1, choices=NATURE_OF_ACTIVITY, null=True, blank=True) 
     picture = models.ImageField(upload_to='picture/%Y/%m/%d', blank=True, null=True)
     
@@ -50,7 +56,7 @@ class LoanCategory(MainModel):
     repayment_term_range = models.IntegerField(null=True, blank=True)
     loan_amount_range = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True)
     collateral = models.CharField(max_length=300, null=True, blank=True)
-    loan_purpose = models.CharField(choices=LOAN_PURPOSES, default=1, null=True, blank=True)
+    loan_purpose = models.CharField(choices=LOAN_PURPOSES, default=1, null=True, blank=True, max_length=200)
     # for late repayment
     penalty_fee = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True) 
     
@@ -80,8 +86,8 @@ REPAYMENT_TERM = (
 )
 
 class Loan(MainModel):
-    borrower_id = models.ForeignKey('backend.Borrower', on_delete=models.CASCADE, null=True, blank=True)
-    category_id = models.ForeignKey("backend.LoanCategory", on_delete=models.SET_NULL)
+    borrower_id = models.ForeignKey('backend.borrower', on_delete=models.CASCADE, null=True, blank=True)
+    category_id = models.ForeignKey("backend.loanCategory", on_delete=models.SET_NULL, null=True, blank=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     interest_rate = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     repayment_term = models.IntegerField(choices=REPAYMENT_TERM, null=True, blank=True)
@@ -100,8 +106,8 @@ LOAN_APPLICATIONS = (
     (2, 'Rejected'),
     (3, 'Missing')
 )
-class Applications(MainModel):
-    loan = models.ForeignKey('backend.Loan', on_delete=models.CASCADE, null=True, blank=True)
+class Application(MainModel):
+    loan = models.ForeignKey('backend.loan', on_delete=models.CASCADE, null=True, blank=True)
     status = models.IntegerField(choices=LOAN_APPLICATIONS, null=True, blank=True)
     
     def __str__(self):
@@ -116,7 +122,7 @@ PAYMENT_STATUS = (
 ) 
 
 class LoanPayment(MainModel):
-    loan = models.IntegerField('backend.Loan', null=True, blank=True, on_delete=models.CASCADE)
+    loan = models.ForeignKey('backend.loan', null=True, blank=True, on_delete=models.CASCADE)
     payment_number = models.CharField(max_length=200, null=True, blank=True)
     payment_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     # the amount that lowers the loan balance of a customer amount
