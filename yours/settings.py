@@ -34,7 +34,7 @@ if PRODUCTION:
     STATE_INDEX = 1
 
 else:
-    HOST_IP = '192.168.137.1'
+    HOST_IP = '192.168.2.46'
     HOST_ADDR = f"http://{HOST_IP}:5000"
     STATE_INDEX = 0
 
@@ -52,7 +52,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'backend'
+    'backend',
+    'widget_tweaks'
 ]
 
 MIDDLEWARE = [
