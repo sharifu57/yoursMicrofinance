@@ -45,6 +45,26 @@ class AuthenticationForm(forms.ModelForm):
         super(AuthenticationForm, self).__init__(*args, **kwargs)
         self.fields['username'].required = True
         self.fields['password'].required = True 
+        
+
+
+class LoanApplicationForm(forms.ModelForm):
+    """Form definition for LoanApplication."""
+
+    class Meta:
+        """Meta definition for LoanApplicationform."""
+
+        model = Loan
+        fields = [
+            'borrower',
+            'category',
+            'amount',
+            'repayment_term',
+            'payment_frequency',
+            'start_date',
+            'document'
+        ]
+
             
                 
             

@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from backend.forms import *
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
+from django.db.models import Sum
 
 # Create your views here.
 
@@ -57,8 +58,10 @@ class LoginView(View):
 class DashboardView(MainView):
     def get(self, request, *args, **kwargs):
         
+        loan_sum = Loan.objects.aggregate(total=Sum('amount'))
+      
         context={
-            
+            'loan_sum': loan_sum
         }
         
         return render(request, 'home/dashboard.html', context)

@@ -1,5 +1,54 @@
 {% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
 
 {% block content %}
-    daashboard
+<div class="" style="background-color: #f9fcff;">
+    <div class="container">
+        <div class="pt-3">
+            <h5>Loan Book</h5>
+        </div>
+        <div class="pt-5">
+            <div class="row">
+                <div class="col-md-6">
+                    <p style="font-size: 12px; font-weight: 500;">TOTAL LOANS OUTSTANDING</p>
+                    <div class="card card-default card-body" style="border-color: #f9fcff;">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <p>Tzs<h1>{{loan_sum.total|intcomma}}</h1></p> 
+                            </div>
+                            <div class="pt-5">
+                                <div class="text-right">
+                                    <button class="btn btn-primary me-md-2" type="button" style="border-radius: 20px;">Create New Loan</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pt-5">
+                            <p class="text-uppercase" style="font-size: 12px;">Loan Disbursed History</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <p style="font-size: 12px; font-weight: 500;">OUTSTANDING DELAY STATUS</p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card card-default card-body" style="border-color: #f9fcff;">
+                                one
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card card-default card-body" style="border-color: #f9fcff;">
+                                one
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="pt-5">
+
+        </div>
+    </div>
+</div>
 {% endblock content %}
+

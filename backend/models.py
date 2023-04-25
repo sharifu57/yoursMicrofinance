@@ -50,16 +50,20 @@ LOAN_PURPOSES = (
     ('other', 'Other')
 )
 
+REPAYMENT_RANGE=(
+    (1, '1 Year'),
+)
+
 class LoanCategory(MainModel):
     category_name = models.CharField(max_length=200, null=True, blank=True)
     interest = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True)
-    repayment_term_range = models.IntegerField(null=True, blank=True)
-    loan_amount_range = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True)
+    repayment_term_range = models.IntegerField(null=True, blank=True, choices=REPAYMENT_RANGE, default=1)
+    loan_amount_range_from = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True)
+    loan_amount_range_to = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True)
     collateral = models.CharField(max_length=300, null=True, blank=True)
     loan_purpose = models.CharField(choices=LOAN_PURPOSES, default=1, null=True, blank=True, max_length=200)
     # for late repayment
-    penalty_fee = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True) 
-    
+    # penalty_fee = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True) 
     def __str__(self):
         
         return self.category_name 
@@ -86,19 +90,22 @@ REPAYMENT_TERM = (
 )
 
 class Loan(MainModel):
-    borrower_id = models.ForeignKey('backend.borrower', on_delete=models.CASCADE, null=True, blank=True)
-    category_id = models.ForeignKey("backend.loanCategory", on_delete=models.SET_NULL, null=True, blank=True)
+    borrower = models.ForeignKey('backend.borrower', on_delete=models.CASCADE, null=True, blank=True)
+    category = models.ForeignKey("backend.loanCategory", on_delete=models.SET_NULL, null=True, blank=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     interest_rate = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    repayment_term = models.IntegerField(choices=REPAYMENT_TERM, null=True, blank=True)
+    repayment_term = models.IntegerField(choices=REPAYMENT_TERM, default=1, null=True, blank=True)
     payment_frequency = models.IntegerField(choices=PAYMENT_FREQUENCY, null=True, blank=True, default=1)
     interest_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     document = models.FileField(upload_to='documents/%Y/%m/%d', null=True, blank=True)
+    penalty_fee = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True) 
+    start_date = models.DateTimeField(null=True,blank=True)
+    end_date = models.DateTimeField(null=True,blank=True)
     status = models.IntegerField(choices=LOAN_STATUS, null=True, blank=True)
 
     def __str__(self):
         
-        return self.amount
+        return self.borrower.fist_name
     
 
 LOAN_APPLICATIONS = (
