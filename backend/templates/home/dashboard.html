@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="" style="background-color: #f9fcff;">
-    <div class="container">
+    <div class="">
         <div class="pt-3">
             <h5>Loan Book</h5>
         </div>
@@ -14,12 +14,14 @@
                     <p style="font-size: 12px; font-weight: 500;">TOTAL LOANS OUTSTANDING</p>
                     <div class="card card-default card-body" style="border-color: #f9fcff;">
                         <div class="d-flex justify-content-between">
-                            <div>
+                            <div> 
                                 <p>Tzs<h1>{{loan_sum.total|intcomma}}</h1></p> 
                             </div>
                             <div class="pt-5">
                                 <div class="text-right">
-                                    <button class="btn btn-primary me-md-2" type="button" style="border-radius: 20px;">Create New Loan</button>
+                                    <a href="javascript:" data-href="{% url 'create_new_loan' %}" class="new-loan-link">
+                                        <button class="btn btn-primary me-md-2" type="button" style="border-radius: 20px;">Create New Loan</button>
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -51,4 +53,25 @@
     </div>
 </div>
 {% endblock content %}
+
+{% block scripts %}
+    <script src="/static/assets/js/helpers.js"></script>
+    <!-- <script type="text/javascript" src="{% static 'assets/js/helper_functions.js' %}"></script> -->
+    <!-- <script type="text/javascript" src="{% static 'assets/js/property/property.js' %}"></script> -->
+
+    <script>
+        $(function(){
+            $(document).on('click', '.new-loan-link', function() {
+            let url = $(this).data('href');
+            let title = "New Loan Form";   
+            let columnClass = "col-md-9"
+            let formSelector = ".create-new-loan-form"
+            let containerFluid = false
+
+            ajaxPost(title, url, columnClass, containerFluid, formSelector);
+            })
+
+        })
+    </script>
+{% endblock scripts %}
 

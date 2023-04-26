@@ -102,6 +102,7 @@ class Loan(MainModel):
     start_date = models.DateTimeField(null=True,blank=True)
     end_date = models.DateTimeField(null=True,blank=True)
     status = models.IntegerField(choices=LOAN_STATUS, null=True, blank=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         

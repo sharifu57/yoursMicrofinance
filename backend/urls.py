@@ -16,5 +16,10 @@ urlpatterns = [
         'dashboard/',
         views.DashboardView.as_view(),
         name="dashboard"
+    ),
+    path(
+        'create_new_loan/',
+        views.CreateNewLoanView.as_view(),
+        name="create_new_loan"
     )
 ]

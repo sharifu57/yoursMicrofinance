@@ -65,4 +65,15 @@ class DashboardView(MainView):
         }
         
         return render(request, 'home/dashboard.html', context)
+    
+class CreateNewLoanView(MainView):
+    def get(self, request, *args, **kwargs):
+        
+        form = LoanApplicationForm()
+        
+        context={
+            'form': form
+        }
+        
+        return render(request, 'home/create_loan.html', context)
 
