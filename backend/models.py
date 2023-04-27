@@ -112,8 +112,8 @@ class Loan(MainModel):
         return self.borrower.fist_name
     
     
-    def calculate_interest_amount(amount, interest_rate):
-        return amount * (interest_rate/100)
+    def calculate_interest_amount(loan_amount, interest_rate):
+        return loan_amount * (interest_rate/100)
     
     def save(self, *args, **kwargs):
         if not self.interest_amount:

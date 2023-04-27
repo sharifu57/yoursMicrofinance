@@ -52,7 +52,6 @@ class AuthenticationForm(forms.ModelForm):
 
 class LoanApplicationForm(forms.ModelForm):
     """Form definition for LoanApplication."""
-    borrower = forms.RadioSelect()
     class Meta:
         """Meta definition for LoanApplicationform."""
 
@@ -66,30 +65,8 @@ class LoanApplicationForm(forms.ModelForm):
             'start_date',
             'document'
         ]
-        # widgets = {
-        #     'borrower': Select2MultipleWidget(select2_options={
-        #         'minimumInputLength': 3,
-        #     }),
-        # }
-        
-  
-        
-    def __init__(self, *args, **kwargs):
-        super(LoanApplicationForm, self).__init__(*args, **kwargs)
-        self.fields['borrower'].queryset = Borrower.objects.filter(is_active=True, is_deleted=False)
-        self.fields['category'].queryset = LoanCategory.objects.filter(is_active=True, is_deleted=False)
-        self.fields['amount'].required = True
-        self.fields['repayment_term'].required = True
-        self.fields['payment_frequency'].required = True
-        self.fields['start_date'].required = True
-        self.fields['document'].required = True
-        
-        
-    # def save(self, *args, **kwargs):
-    #     form=super(LoanApplicationForm, self).save(*args, **kwargs, commit=False)
-    #     form.save()
-    #     return form
-    
+ 
+   
 class LoanBorrowerForm(forms.ModelForm):
     """LoanBorrowerForm definition."""
 

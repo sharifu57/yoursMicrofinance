@@ -154,6 +154,7 @@ class CreateNewLoanView(MainView):
         return render(request, 'home/create_loan.html', context)
     
     def post(self, request, *args, **kwargs):
+        
         form = LoanBorrowerForm(
             request.POST
         )
@@ -161,6 +162,7 @@ class CreateNewLoanView(MainView):
         borrower = request.POST.get('borrower_id')
         category = request.POST.get('category_id')
         if form.is_valid():
+            print("-----valid form loan")
             loan = Loan()
             loan.amount = request.POST['amount']
             if borrower:
@@ -185,7 +187,7 @@ class CreateNewLoanView(MainView):
             return HttpResponse(json.dumps(info))
         
         else:
-            
+            print("---not valid form loan")
             form = LoanBorrowerForm()
             info = {
                 "status": False,
