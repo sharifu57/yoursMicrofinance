@@ -88,18 +88,6 @@ class DashboardView(MainView):
         
         return render(request, 'home/dashboard.html', context)
     
-    
-class CreateNewLoanView(MainView):
-    def get(self, request, *args, **kwargs):
-        
-        form = LoanApplicationForm()
-        
-        context={
-            'form': form
-        }
-        
-        return render(request, 'home/create_loan.html', context)
-    
 
 def generate_unique_numbers():
     return random.randint(1000000000, 9999999999)
@@ -153,3 +141,57 @@ class CreateNewBorrower(MainView):
             }  
             
             return HttpResponse(json.dumps(info))
+        
+class CreateNewLoanView(MainView):
+    def get(self, request, *args, **kwargs):
+        
+        form = LoanApplicationForm()
+        
+        context={
+            'form': form
+        }
+        
+        return render(request, 'home/create_loan.html', context)
+    
+    def post(self, request, *args, **kwargs):
+        form = LoanBorrowerForm(
+            request.POST
+        )
+        
+        borrower = request.POST.get('borrower_id')
+        category = request.POST.get('category_id')
+        if form.is_valid():
+            loan = Loan()
+            loan.amount = request.POST['amount']
+            if borrower:
+                print("----borrower")
+                print(borrower)
+                loan.borrower = borrower
+            else:
+                print("-----no data")
+            loan.category = category
+            loan.repayment_term = request.POST['repayment_term']
+            loan.payment_frequency = request.POST['payment_frequency']
+            loan.start_date = request.POST['start_date']
+            loan.document = request.FILES['document']
+            
+            loan.save()
+            
+            info = {
+                "status":True,
+                "message": "Success created"
+            }
+            
+            return HttpResponse(json.dumps(info))
+        
+        else:
+            
+            form = LoanBorrowerForm()
+            info = {
+                "status": False,
+                "message": "Failed to Create"
+            }
+            
+            return HttpResponse(json.dumps(info))
+        
+        

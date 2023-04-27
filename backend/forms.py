@@ -72,16 +72,9 @@ class LoanApplicationForm(forms.ModelForm):
         #     }),
         # }
         
-    def clean(self):
-        borrower = self.cleaned_data.get('borrower')
-        
-        if Loan.objects.filter(Q(borrower=borrower)&Q(status=1)).exists():
-            raise forms.ValidationError("This user already have a Loan")
-        else:
-            pass
+  
         
     def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop('user', None)
         super(LoanApplicationForm, self).__init__(*args, **kwargs)
         self.fields['borrower'].queryset = Borrower.objects.filter(is_active=True, is_deleted=False)
         self.fields['category'].queryset = LoanCategory.objects.filter(is_active=True, is_deleted=False)
@@ -92,11 +85,10 @@ class LoanApplicationForm(forms.ModelForm):
         self.fields['document'].required = True
         
         
-    def save(self, *args, **kwargs):
-        form=super(LoanApplicationForm, self).save(*args, **kwargs, commit=False)
-        form.user_id = self.user.id
-        form.save()
-        return form
+    # def save(self, *args, **kwargs):
+    #     form=super(LoanApplicationForm, self).save(*args, **kwargs, commit=False)
+    #     form.save()
+    #     return form
     
 class LoanBorrowerForm(forms.ModelForm):
     """LoanBorrowerForm definition."""

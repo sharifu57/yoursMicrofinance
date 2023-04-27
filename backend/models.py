@@ -96,7 +96,7 @@ class Loan(MainModel):
     borrower = models.ForeignKey('backend.borrower', on_delete=models.CASCADE, null=True, blank=True)
     category = models.ForeignKey("backend.loanCategory", on_delete=models.SET_NULL, null=True, blank=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    interest_rate = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    interest_rate = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=30)
     repayment_term = models.IntegerField(choices=REPAYMENT_TERM, default=1, null=True, blank=True)
     payment_frequency = models.IntegerField(choices=PAYMENT_FREQUENCY, null=True, blank=True, default=1)
     interest_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
@@ -110,6 +110,16 @@ class Loan(MainModel):
     def __str__(self):
         
         return self.borrower.fist_name
+    
+    
+    def calculate_interest_amount(amount, interest_rate):
+        return amount * (interest_rate/100)
+    
+    def save(self, *args, **kwargs):
+        if not self.interest_amount:
+            self.interest_amount = calculate_interest_amount(self.amount, self.interest_rate)
+        super().save(*args, **kwargs)
+        
     
 
 LOAN_APPLICATIONS = (

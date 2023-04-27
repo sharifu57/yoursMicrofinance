@@ -55,7 +55,22 @@
                         </div>
                         <div class="col-md-6">
                             <div class="card card-default card-body" style="border-color: #f9fcff;">
-                                one
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <p style="font-size: 10px;">INTEREST AMOUNT</p>
+                                    </div>
+                                    <div>
+                                        <a href="javascript:" data-href="{% url 'add_new_borrower' %}" class="new-borrower-link">
+                                            <button class="btn btn-primary me-md-2" type="button" style="border-radius: 30px;">+</button>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="pt-3">
+                                    <p style="font-weight: 400; font-size: 18px;">{{borrowers.count|intcomma}}</p>
+                                </div>
+                                <div>
+                                    <p style="font-size: 10px;">{{new_added.count|intcomma}} <span></span> today</p>
+                                </div>
                             </div>
                         </div>
                     </div>
