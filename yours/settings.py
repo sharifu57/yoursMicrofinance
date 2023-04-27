@@ -54,7 +54,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'backend',
     'widget_tweaks',
-    'django.contrib.humanize'
+    'django.contrib.humanize',
+    'pendulum',
+    'django_select2'
 ]
 
 MIDDLEWARE = [
@@ -138,7 +140,7 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)

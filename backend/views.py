@@ -8,7 +8,11 @@ from backend.forms import *
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.db.models import Sum
-
+import pendulum
+import random
+from backend.models import *
+from django.http import HttpResponse
+import json
 # Create your views here.
 
 class MainView(View):
@@ -58,13 +62,32 @@ class LoginView(View):
 class DashboardView(MainView):
     def get(self, request, *args, **kwargs):
         
+        import pendulum
+        
+        # now = pendulum.now()
+        
+        
+        # start_date = now.start_of('month').date()
+        # start_date = pendulum.today()
+        # end_date = pendulum.today()
+        
         loan_sum = Loan.objects.aggregate(total=Sum('amount'))
+        borrowers = Borrower.objects.all()
+        new_clients = Borrower.objects.filter(
+            is_active=True, 
+            is_deleted=False,
+            created__date=pendulum.today()
+        )
+        
       
         context={
-            'loan_sum': loan_sum
+            'loan_sum': loan_sum,
+            'borrowers': borrowers,
+            'new_added': new_clients
         }
         
         return render(request, 'home/dashboard.html', context)
+    
     
 class CreateNewLoanView(MainView):
     def get(self, request, *args, **kwargs):
@@ -76,4 +99,57 @@ class CreateNewLoanView(MainView):
         }
         
         return render(request, 'home/create_loan.html', context)
+    
 
+def generate_unique_numbers():
+    return random.randint(1000000000, 9999999999)
+    
+class CreateNewBorrower(MainView):
+    def get(self, request, *args, **kwargs):
+        form = LoanBorrowerForm()
+        context = {
+            'form': form
+        }
+        return render(request, 'home/borrower_form.html', context)
+
+
+    def post(self, request, *args, **kwargs):
+        form = LoanBorrowerForm(
+            request.POST
+        )
+        
+        if form.is_valid():
+            print("-----a valid form")
+            borrower = Borrower()
+            borrower.first_name = request.POST['first_name']
+            borrower.last_name = request.POST['last_name']
+            borrower.email = request.POST['email']
+            borrower.phone = request.POST['phone']
+            borrower.nida_number = request.POST['nida_number']
+            borrower.address = request.POST['address']
+            borrower.date_of_birth = request.POST['date_of_birth']
+            borrower.nature_of_employment = request.POST['nature_of_employment']
+            borrower.picture = request.FILES['picture']
+            borrower.created_by = request.user
+            borrower.identity = generate_unique_numbers()
+        
+            borrower.save()  
+            print(borrower)   
+            
+            info = {
+                "status": True,
+                "message": "Successfully Created"
+            }  
+            
+            return HttpResponse(json.dumps(info)) 
+        
+        else:
+            print("-----not created completely")
+            form = LoanBorrowerForm()
+            info = {
+                "status": False,
+                "message": "Failed To Create",
+                "Error": form.errors
+            }  
+            
+            return HttpResponse(json.dumps(info))

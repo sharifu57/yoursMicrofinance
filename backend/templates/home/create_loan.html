@@ -1,3 +1,57 @@
-<div class="create-new-loan-form">
-    hello
-</div>
+<form class="create-new-loan-form" action="{% url 'create_new_loan'  %}" method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    {% load widget_tweaks %}
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="">Borrower</label>
+                    {% render_field form.borrower class="form-control" style="border-radius: 20px" %}
+                </div>
+            </div>
+            <div class="col-md-12 pt-3">
+                <div class="form-group">
+                    <label for="">Category</label>
+                    {% render_field form.category class="form-control" style="border-radius: 20px" %}
+                    <span class="text-danger">{{ form.category.errors }}</span>
+                </div>
+            </div>
+            <div class="col-md-12 pt-3">
+                <div class="form-group">
+                    <label for="">Amount</label>
+                    {% render_field form.amount class="form-control" type="number" style="border-radius: 20px" %}
+                    <span class="text-danger">{{ form.amount.errors }}</span>
+                </div>
+            </div>
+            <div class="col-md-12 pt-3">
+                <div class="form-group">
+                    <label for="">Payment Term</label>
+                    {% render_field form.repayment_term class="form-control" style="border-radius: 20px" %}
+                    <span class="text-danger">{{ form.repayment_term.errors }}</span>
+                </div>
+            </div>
+            <div class="col-md-12 pt-3">
+                <div class="form-group">
+                    <label for="">Payment Frequency</label>
+                    {% render_field form.payment_frequency class="form-control" style="border-radius: 20px" %}
+                    <span class="text-danger">{{ form.payment_frequency.errors }}</span>
+                </div>
+            </div>
+            <div class="col-md-12 pt-3">
+                <div class="form-group">
+                    <label for="">Start From</label>
+                    {% render_field form.start_date class="form-control" type="date" format="%Y-%m-%d" style="border-radius: 20px" %}
+                    <span class="text-danger">{{ form.start_date.errors }}</span>
+                </div>
+            </div>
+            <div class="col-md-12 pt-3">
+                <div class="form-group">
+                    <label for="">Document(Barua ya Mjumbe)</label>
+                    {% render_field form.document class="form-control" style="border-radius: 20px" %}
+                    <span class="text-danger">{{ form.document.errors }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

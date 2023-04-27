@@ -1,0 +1,85 @@
+<form class="borrower_form_class" action="{% url 'add_new_borrower'  %}" method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    {% load widget_tweaks %}
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12 pt-3">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="" style="font-size: 13px;">First Name</label>
+                            {% render_field form.first_name class="form-control" style="border-radius: 20px" %}
+                            <span class="text-danger">{{ form.first_name.errors }}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="" style="font-size: 13px;">Last Name</label>
+                            {% render_field form.last_name class="form-control" style="border-radius: 20px" %}
+                            <span class="text-danger">{{ form.last_name.errors }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 pt-3">
+                <div class="form-group">
+                    <label for="" style="font-size: 13px;">Email</label>
+                    {% render_field form.email class="form-control" style="border-radius: 20px" %}
+                    <span class="text-danger">{{ form.email.errors }}</span>
+                </div>
+            </div>
+            <div class="col-md-12 pt-3">
+                <div class="form-group">
+                    <label for="" style="font-size: 13px;">Phone Number</label>
+                    {% render_field form.phone class="form-control" style="border-radius: 20px" %}
+                    <span class="text-danger">{{ form.phone.errors }}</span>
+                </div>
+            </div>
+            <div class="col-md-12 pt-3">
+                <div class="form-group">
+                    <label for="" style="font-size: 13px;">Date Of Birth</label>
+                    <div  class="input-group date" id="pickadate">
+                        {% render_field form.date_of_birth class="form-control" type="date" format="%Y-%m-%d" style="border-radius: 20px" %}
+                        <span class="text-danger">{{ form.date_of_birth.errors }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 pt-3">
+                <div class="form-group">
+                    <label for="" style="font-size: 13px;">Nida Number</label>
+                    <div  class="input-group date" id="pickadate">
+                        {% render_field form.nida_number class="form-control" style="border-radius: 20px" %}
+                        <span class="text-danger">{{ form.nida_number.errors }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 pt-3">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="" style="font-size: 13px;">Address</label>
+                            {% render_field form.address class="form-control" style="border-radius: 20px" %}
+                            <span class="text-danger">{{ form.address.errors }}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="" style="font-size: 13px;">Nature Of Employment</label>
+                            {% render_field form.nature_of_employment class="form-control" style="border-radius: 20px" %}
+                            <span class="text-danger">{{ form.address.errors }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 pt-3">
+                <div class="form-group">
+                    <label for="" style="font-size: 13px;">Picture</label>
+                    <div  class="input-group date" id="pickadate">
+                        {% render_field form.picture class="form-control" style="border-radius: 20px" %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

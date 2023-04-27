@@ -21,5 +21,10 @@ urlpatterns = [
         'create_new_loan/',
         views.CreateNewLoanView.as_view(),
         name="create_new_loan"
+    ),
+    path(
+        'add_new_borrower/',
+        views.CreateNewBorrower.as_view(),
+        name="add_new_borrower"
     )
 ]

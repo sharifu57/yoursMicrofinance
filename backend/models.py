@@ -28,11 +28,11 @@ NATURE_OF_ACTIVITY = (
     
 class Borrower(MainModel):
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
-    identity = models.CharField(max_length=200, null=True, blank=True)
-    fist_name = models.CharField(max_length=200, null=True, blank=True)
+    identity = models.CharField(max_length=10, null=True, blank=True)
+    first_name = models.CharField(max_length=200, null=True, blank=True)
     middle_name = models.CharField(max_length=200, null=True, blank=True)
     last_name = models.CharField(max_length=200, null=True, blank=True)
-    phone = models.CharField(max_length=20, null=True, blank=True)
+    phone = models.CharField(max_length=10, null=True, blank=True)
     email = models.EmailField(max_length=200, null=True, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
     nida_number = models.CharField(null=True, blank=True, max_length=20)
@@ -41,7 +41,10 @@ class Borrower(MainModel):
     picture = models.ImageField(upload_to='picture/%Y/%m/%d', blank=True, null=True)
     
     def __str__(self):
-        return f"{self.fist_name}, ' ' ,{self.last_name}"
+        return f"{self.first_name} {self.last_name}"
+    
+    
+        
     
 LOAN_PURPOSES = (
     ('education', 'Education Purpose'),

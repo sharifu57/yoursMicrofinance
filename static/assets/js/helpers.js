@@ -33,7 +33,7 @@ function ajaxGet(title, url, columnClass, containerFluid) {
         content: "url:" + url,
         columnClass: columnClass,
         containerFluid: containerFluid,
-        type: "green",
+        type: "red",
         offsetTop: 1,
         //offsetBottom: 1,
         onContentReady: function () {
@@ -125,7 +125,7 @@ function select2Selector() {
 function ajaxPost(title, url, columnClass, containerFluid, formSelector, buttonsColumnClass) {
     $.confirm({
         title: title,
-        type: "green",
+        type: "dark",
         closeIcon: true,
         columnClass: columnClass,
         containerFluid: containerFluid,
@@ -133,14 +133,11 @@ function ajaxPost(title, url, columnClass, containerFluid, formSelector, buttons
         offsetTop: 1,
         offsetBottom: 1,
         useBootstrap: true,
+        typeAnimated: true,
         onContentReady: function () {
             let self = this;
 
             $(".jconfirm-buttons").addClass(buttonsColumnClass);
-
-            //datePickerSelector()
-
-            //select2Selector()
 
             $(document).on("submit", formSelector, function (e) {
                 e.preventDefault();
@@ -183,15 +180,14 @@ function ajaxPost(title, url, columnClass, containerFluid, formSelector, buttons
         },
         onClose: function () {
             window.location.reload();
-            // $(".datepicker").datepicker("destroy");
         },
         onOpenBefore: function () {
             $("body").addClass("no-scroll");
         },
         buttons: {
             submit: {
-                text: 'Submit',
-                btnClass: 'btn-success',
+                text: 'CREATE NOW',
+                btnClass: '',
                 action: function () {
                     $(formSelector).submit();
                     return false;
