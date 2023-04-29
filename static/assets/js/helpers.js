@@ -189,7 +189,7 @@ function ajaxPost(title, url, columnClass, containerFluid, formSelector, buttons
                 text: 'SUBMIT',
                 btnClass: '',
                 action: function () {
-                    $(formSelector).submit();
+                    $(formSelector).trigger("submit");
                     return false;
                 }
             }

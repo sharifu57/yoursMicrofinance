@@ -82,7 +82,8 @@ LOAN_STATUS = (
     (1, 'Active'),
     (2, 'Approved'),
     (3, 'Rejected'),
-    (4, 'Waiting')
+    (4, 'Waiting'),
+    (5, 'Applying')
 )
 
 REPAYMENT_TERM = (
@@ -104,23 +105,14 @@ class Loan(MainModel):
     penalty_fee = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True) 
     start_date = models.DateTimeField(null=True,blank=True)
     end_date = models.DateTimeField(null=True,blank=True)
-    status = models.IntegerField(choices=LOAN_STATUS, null=True, blank=True)
+    status = models.IntegerField(choices=LOAN_STATUS, null=True, blank=True, default=5)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         
-        return self.borrower.fist_name
+        return self.start_date
     
-    
-    def calculate_interest_amount(loan_amount, interest_rate):
-        return loan_amount * (interest_rate/100)
-    
-    def save(self, *args, **kwargs):
-        if not self.interest_amount:
-            self.interest_amount = calculate_interest_amount(self.amount, self.interest_rate)
-        super().save(*args, **kwargs)
-        
-    
+
 
 LOAN_APPLICATIONS = (
     (1, 'Approved'),

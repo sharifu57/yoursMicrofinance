@@ -13,6 +13,7 @@ import random
 from backend.models import *
 from django.http import HttpResponse
 import json
+import pendulum
 # Create your views here.
 
 class MainView(View):
@@ -63,14 +64,7 @@ class DashboardView(MainView):
     def get(self, request, *args, **kwargs):
         
         import pendulum
-        
-        # now = pendulum.now()
-        
-        
-        # start_date = now.start_of('month').date()
-        # start_date = pendulum.today()
-        # end_date = pendulum.today()
-        
+    
         loan_sum = Loan.objects.aggregate(total=Sum('amount'))
         borrowers = Borrower.objects.all()
         new_clients = Borrower.objects.filter(
@@ -79,11 +73,16 @@ class DashboardView(MainView):
             created__date=pendulum.today()
         )
         
+        loans = Loan.objects.filter(
+            is_active=True, 
+            is_deleted=False
+        ).order_by('-created')[:3]
       
         context={
             'loan_sum': loan_sum,
             'borrowers': borrowers,
-            'new_added': new_clients
+            'new_added': new_clients,
+            'loans': loans
         }
         
         return render(request, 'home/dashboard.html', context)
@@ -102,11 +101,13 @@ class CreateNewBorrower(MainView):
 
 
     def post(self, request, *args, **kwargs):
+        context = list()
         form = LoanBorrowerForm(
             request.POST
         )
         
         if form.is_valid():
+            
             print("-----a valid form")
             borrower = Borrower()
             borrower.first_name = request.POST['first_name']
@@ -120,24 +121,23 @@ class CreateNewBorrower(MainView):
             borrower.picture = request.FILES['picture']
             borrower.created_by = request.user
             borrower.identity = generate_unique_numbers()
-        
+           
             borrower.save()  
+            borrower.refresh_from_db()
             print(borrower)   
             
             info = {
                 "status": True,
                 "message": "Successfully Created"
             }  
-            
+            context.append(info)
             return HttpResponse(json.dumps(info)) 
         
         else:
             print("-----not created completely")
-            form = LoanBorrowerForm()
             info = {
                 "status": False,
-                "message": "Failed To Create",
-                "Error": form.errors
+                "message": "Failed To Create, Some fields are empty"
             }  
             
             return HttpResponse(json.dumps(info))
@@ -154,30 +154,34 @@ class CreateNewLoanView(MainView):
         return render(request, 'home/create_loan.html', context)
     
     def post(self, request, *args, **kwargs):
-        
-        form = LoanBorrowerForm(
+        interest_rate = 30
+        form = LoanApplicationForm(
             request.POST
         )
         
-        borrower = request.POST.get('borrower_id')
-        category = request.POST.get('category_id')
+        borrower_id = request.POST.get('borrower', None)
+        category_id = request.POST.get('category', None)
+ 
         if form.is_valid():
-            print("-----valid form loan")
             loan = Loan()
             loan.amount = request.POST['amount']
-            if borrower:
-                print("----borrower")
-                print(borrower)
-                loan.borrower = borrower
+            if borrower_id:
+                loan.borrower = Borrower.objects.get(id=borrower_id)
             else:
-                print("-----no data")
-            loan.category = category
+                pass
+                
+            if category_id:
+                loan.category = LoanCategory.objects.get(id=category_id)
+            else:
+                pass
             loan.repayment_term = request.POST['repayment_term']
             loan.payment_frequency = request.POST['payment_frequency']
             loan.start_date = request.POST['start_date']
             loan.document = request.FILES['document']
-            
+            loan.created_by = request.user
+            loan.interest_amount = float(loan.amount) * (interest_rate/100)
             loan.save()
+            loan.refresh_from_db()
             
             info = {
                 "status":True,
@@ -187,7 +191,6 @@ class CreateNewLoanView(MainView):
             return HttpResponse(json.dumps(info))
         
         else:
-            print("---not valid form loan")
             form = LoanBorrowerForm()
             info = {
                 "status": False,

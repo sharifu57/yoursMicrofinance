@@ -69,42 +69,49 @@ class LoanApplicationForm(forms.ModelForm):
    
 class LoanBorrowerForm(forms.ModelForm):
     """LoanBorrowerForm definition."""
-
     # TODO: Define form fields here
-    first_name = forms.CharField(required=True, error_messages={'required': 'Please enter your first name.'})
     class Meta:
         model = Borrower
         fields = [
             'first_name',
             'last_name',
-            'nida_number',
             'email',
             'phone',
-            'date_of_birth',
+            'nida_number',
             'address',
+            'date_of_birth',
             'nature_of_employment',
-            'picture'
+            'picture',
             
         ]
         
-   
+    def __init__(self, *args, **kwargs):
+        super(LoanBorrowerForm, self).__init__(*args, **kwargs)
+        self.fields['first_name'].required = True
+        self.fields['last_name'].required = True
         
-    # def __init__(self, *args, **kwargs):
-    #     super(LoanBorrowerForm, self).__init__(*args, **kwargs)
-    #     self.fields['first_name'].required=True
-    #     self.fields['first_name'].widget.attrs['placeholder'] = ""
-    #     self.fields['last_name'].required=True
-    #     self.fields['email'].required=True
-    #     self.fields['phone'].required=True
-    #     self.fields['date_of_birth'].required=True
     
+    def clean(self, *args, **kwargs):
+        cleaned_data = self.cleaned_data
+        first_name = cleaned_data.get('first_name')
+        last_name = cleaned_data.get('last_name')
+        
+        if Borrower.objects.filter(first_name__iexact = first_name).exists():
+            self.errors["first_name"] = "This name already exist"
+        if not last_name:
+            self.errors["last_name"] = "This field is required"
+        else:
+            pass
+        
+    
+    def save(self, *args, **kwargs):
+        form = super(LoanBorrowerForm, self).save(*args, **kwargs, commit=False)
+        form.save()
+        return form
+        
     
         
-    # def save(self, *args, **kwargs):
-    #     form=super(LoanBorrowerForm, self).save(*args, **kwargs, commit=True)
-    #     form.created_by_id = self.created_by.id
-    #     form.save()
-    #     return form
+    
         
         
 
