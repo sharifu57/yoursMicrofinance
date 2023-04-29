@@ -71,6 +71,7 @@ class LoanBorrowerForm(forms.ModelForm):
     """LoanBorrowerForm definition."""
 
     # TODO: Define form fields here
+    first_name = forms.CharField(required=True, error_messages={'required': 'Please enter your first name.'})
     class Meta:
         model = Borrower
         fields = [
@@ -86,15 +87,16 @@ class LoanBorrowerForm(forms.ModelForm):
             
         ]
         
+   
         
-    def __init__(self, *args, **kwargs):
-        super(LoanBorrowerForm, self).__init__(*args, **kwargs)
-        self.fields['first_name'].required=True
-        self.fields['first_name'].widget.attrs['placeholder'] = ""
-        self.fields['last_name'].required=True
-        self.fields['email'].required=True
-        self.fields['phone'].required=True
-        self.fields['date_of_birth'].required=True
+    # def __init__(self, *args, **kwargs):
+    #     super(LoanBorrowerForm, self).__init__(*args, **kwargs)
+    #     self.fields['first_name'].required=True
+    #     self.fields['first_name'].widget.attrs['placeholder'] = ""
+    #     self.fields['last_name'].required=True
+    #     self.fields['email'].required=True
+    #     self.fields['phone'].required=True
+    #     self.fields['date_of_birth'].required=True
     
     
         

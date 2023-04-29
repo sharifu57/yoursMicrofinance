@@ -186,7 +186,7 @@ function ajaxPost(title, url, columnClass, containerFluid, formSelector, buttons
         },
         buttons: {
             submit: {
-                text: 'CREATE NOW',
+                text: 'SUBMIT',
                 btnClass: '',
                 action: function () {
                     $(formSelector).submit();

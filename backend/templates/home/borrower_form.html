@@ -10,7 +10,8 @@
                         <div class="form-group">
                             <label for="" style="font-size: 13px;">First Name</label>
                             {% render_field form.first_name class="form-control" style="border-radius: 20px" %}
-                            <span class="text-danger">{{ form.first_name.errors }}</span>
+                            <!-- <span class="text-danger">{{ form.first_name.errors }}</span> -->
+                            {{form.first_name.errors}}
                         </div>
                     </div>
                     <div class="col-md-6">
