@@ -155,6 +155,7 @@ class CreateNewLoanView(MainView):
     
     def post(self, request, *args, **kwargs):
         interest_rate = 30
+        new_date = None
         form = LoanApplicationForm(
             request.POST
         )
@@ -177,6 +178,23 @@ class CreateNewLoanView(MainView):
             loan.repayment_term = request.POST['repayment_term']
             loan.payment_frequency = request.POST['payment_frequency']
             loan.start_date = request.POST['start_date']
+            if loan.start_date:
+                if loan.repayment_term == "1":
+                    loan.end_date = pendulum.parse(loan.start_date).add(months=1).to_date_string()
+                    
+                if loan.repayment_term == "2":
+                    loan.end_date = pendulum.parse(loan.start_date).add(months=3).to_date_string()
+                    
+                if loan.repayment_term == "3":
+                    loan.end_date = pendulum.parse(loan.start_date).add(months=6).to_date_string()
+                    
+                if loan.repayment_term == "4":
+                    loan.end_date = pendulum.parse(loan.start_date).add(years=1).to_date_string()
+                    
+                else:
+                    loan.end_date = None
+            else:
+                loan.start_date = pendulum.today().to_date_string()
             loan.document = request.FILES['document']
             loan.created_by = request.user
             loan.interest_amount = float(loan.amount) * (interest_rate/100)

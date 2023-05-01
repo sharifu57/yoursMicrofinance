@@ -78,7 +78,7 @@
                                             <div class="col-auto">
                                                 
                                                 {% if loan.borrower.picture %}
-                                                    <img alt="" src="{{ loan.borrower.picture.url   }}" class="rounded-circle">
+                                                    <img alt="" src="{{ loan.borrower.picture.url   }}" class="rounded-circle" style="height: 30px; width:30px">
                                                 {% else %}
                                                 <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 30px; height: 30px; font-weight: bold;">
                                                     {{  loan.borrower.first_name|slice:":1"|upper }}
