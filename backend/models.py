@@ -105,12 +105,13 @@ class Loan(MainModel):
     penalty_fee = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True) 
     start_date = models.DateTimeField(null=True,blank=True)
     end_date = models.DateTimeField(null=True,blank=True)
+    total_interest_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     status = models.IntegerField(choices=LOAN_STATUS, null=True, blank=True, default=5)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         
-        return self.start_date
+        return f"{Borrower.first_name}"
     
 
 

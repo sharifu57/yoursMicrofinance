@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from backend.forms import *
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.db.models import Sum
 import pendulum
 import random
@@ -23,6 +23,13 @@ class MainView(View):
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 
+
+class LogoutView(MainView):
+    def get(self, request):
+        # Do some stuff
+        logout(request)
+        # Redirect to some page
+        return redirect('auth_login')
 
 class LoginView(View):
     def get(self, request, *args, **kwargs):
@@ -59,8 +66,37 @@ class LoginView(View):
             }
             return render(request,'authentication/login.html', context)
         
-
+        
 class DashboardView(MainView):
+    def get(self, request, *args, **kwargs):
+        title = "Dashboard OverView"
+        identity_number = None
+        
+        loan_sum = Loan.objects.aggregate(total=Sum('amount'))
+        interest_amount = Loan.objects.aggregate(total=Sum('interest_amount'))
+        borrowers = Borrower.objects.filter(is_active=True, is_deleted=False)
+        
+        if borrowers:
+            for borrower in borrowers:
+                if borrower.identity is None:
+                    borrower.identity = generate_unique_numbers()
+                    borrower.save()
+                    
+        
+        revenue_amount = loan_sum['total'] + interest_amount['total']
+        
+        members = Borrower.objects.all().count()
+        
+        context = {
+            'title': title,
+            'revenue_amount': revenue_amount,
+            'members': members
+        }
+        
+        return render(request, 'home/dashboard.html', context)
+        
+
+class LoanBookView(MainView):
     def get(self, request, *args, **kwargs):
         
         import pendulum
@@ -85,10 +121,13 @@ class DashboardView(MainView):
             'loans': loans
         }
         
-        return render(request, 'home/dashboard.html', context)
+        return render(request, 'home/loan_book.html', context)
     
 
 def generate_unique_numbers():
+    return random.randint(1000000000, 9999999999)
+
+def generate_payment_number():
     return random.randint(1000000000, 9999999999)
     
 class CreateNewBorrower(MainView):
@@ -192,14 +231,17 @@ class CreateNewLoanView(MainView):
                     loan.end_date = pendulum.parse(loan.start_date).add(years=1).to_date_string()
                     
                 else:
-                    loan.end_date = None
+                    pass
             else:
                 loan.start_date = pendulum.today().to_date_string()
             loan.document = request.FILES['document']
             loan.created_by = request.user
             loan.interest_amount = float(loan.amount) * (interest_rate/100)
+
             loan.save()
             loan.refresh_from_db()
+            
+            print("----loan")
             
             info = {
                 "status":True,
@@ -216,5 +258,54 @@ class CreateNewLoanView(MainView):
             }
             
             return HttpResponse(json.dumps(info))
+        
+class LoansView(MainView):
+    def get(self, request, *args, **kwargs):
+        amount = None
+        interest_rate = None
+        total_interest_amount = None
+        loans  = Loan.objects.filter(is_active=True, is_deleted=False).order_by('-created')
+       
+        
+        
+        if loans:
+            for loan in loans:
+                amount = loan.amount
+                interest_rate = loan.interest_rate
+                if total_interest_amount is None:
+                    total_interest_amount = float(amount) + float(float(amount) * float(interest_rate)/100)
+                    loan.total_interest_amount = total_interest_amount
+                    loan.save()
+                    
+                else:
+                    pass
+            
+                    
+                
+        context = {
+            'loans': loans
+        }
+        
+        return render(request, 'home/loans.html', context)
+    
+class ViewOneLoan(MainView):
+    def get(self, request, *args, **kwargs):
+        
+        loan = Loan.objects.get(
+            id=self.kwargs.get('loan')
+        )
+        
+        payments = LoanPayment.objects.filter(
+            is_active=True,
+            is_deleted=False,
+            loan = loan
+        ).order_by('created')
+
+        context = {
+            'loan': loan,
+            'payments': payments
+        }
+        
+        return render(request, 'home/view_loan.html', context)
         
         

@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<div class="" style="background-color: #F9FCFF;">
+    <div class="">
+        <div class="pt-3">
+            <h5>Loan Book</h5>
+        </div>
+        <div class="pt-5">
+            <div class="row">
+                <div class="col-md-6">
+                    <p style="font-size: 12px; font-weight: 500;">TOTAL LOANS OUTSTANDING</p>
+                    <div class="card card-default card-body" style="border-color: #F9FCFF;">
+                        <div class="d-flex justify-content-between">
+                            <div> 
+                                <p>Tzs<h1>{{loan_sum.total|intcomma}}</h1></p> 
+                            </div>
+                            <div class="pt-5">
+                                <div class="text-right">
+                                    <a href="javascript:" data-href="{% url 'create_new_loan' %}" class="new-loan-link">
+                                        <button class="btn btn-primary me-md-2" type="button" style="border-radius: 20px;">Create New Loan</button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pt-5">
+                            <p class="text-uppercase" style="font-size: 12px;">Loan Disbursed History</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <p style="font-size: 12px; font-weight: 500;">OUTSTANDING DELAY STATUS</p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card card-default card-body" style="border-color: #f9fcff;">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <p style="font-size: 10px;">BORROWERS</p>
+                                    </div>
+                                    <div>
+                                        <a href="javascript:" data-href="{% url 'add_new_borrower' %}" class="new-borrower-link">
+                                            <button class="btn btn-primary me-md-2" type="button" style="border-radius: 30px;">+</button>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="pt-3">
+                                    <p style="font-weight: 400; font-size: 18px;">{{borrowers.count|intcomma}}</p>
+                                </div>
+                                <div>
+                                    <p style="font-size: 10px;">{{new_added.count|intcomma}} <span></span> today</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card card-default card-body" style="border-color: #f9fcff;">
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="pt-5">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="row justify-content-between">
+                        <div class="col-md-9">
+                            <p class="text-uppercase" style="font-size: 12px;">New Loan Requests</p>
+                        </div>
+                        <div class="col-md-3">
+                            {% if perms.backend.can_add_loan %}
+                            <a href="{% url 'loans' %}">
+                                <button type="button" class="btn btn-primary btn-sm" style="background-color: #1372f7; border-color: #1372f7; border-radius: 20px;">View All</button>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="pt-1">
+                        
+                        {% if loans %}
+                            
+                            {% for loan in loans %}
+                                <div class="card card-default card-body mt-1" style="border-color: #F9FCFF; border-radius: 0px;">
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <!-- <img src="{{loan.borrower.picture}}" alt=""> -->
+                                            <div class="col-auto">
+                                                
+                                                {% if loan.borrower.picture %}
+                                                    <img alt="" src="{{ loan.borrower.picture.url   }}" class="rounded-circle" style="height: 30px; width:30px">
+                                                {% else %}
+                                                <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 30px; height: 30px; font-weight: bold;">
+                                                    {{  loan.borrower.first_name|slice:":1"|upper }}
+                                                </div>
+
+                                                {% endif %}
+                                                    
+                                                
+                                              </div>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <p class="" style="padding-top: 0px; font-weight: 500;">{{  loan.borrower.first_name|title }} {{loan.borrower.last_name|title}}</p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <p style="font-size: 12px; font-style: italic; margin-top: 7px;">{{loan.amount|intcomma}} TZs</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                                <p>No Loans Applications</p>
+                        {% endif %}
+                            
+                    </div>
+
+                    <div class="pt-3">
+
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    right
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+<!-- <script src="{% static 'assets/borrower/add_borrower.js' %}"></script> -->
+    <script src="/static/assets/js/helpers.js"></script>
+    <script>
+        $(function(){
+            $(document).on('click', '.new-loan-link', function() {
+            let url = $(this).data('href');
+            let title = "CREATE LOAN";   
+            let columnClass = "col-md-7"
+            let formSelector = ".create-new-loan-form"
+            let containerFluid = false
+
+            ajaxPost(title, url, columnClass, containerFluid, formSelector);
+            })
+        });
+
+        $(function(){
+            $(document).on('click', '.new-borrower-link', function() {
+            let url = $(this).data('href');
+            let title = "BORROWER FORM";   
+            let columnClass = "col-md-6"
+            let formSelector = ".borrower_form_class"
+            let containerFluid = false
+
+            ajaxPost(title, url, columnClass, containerFluid, formSelector);
+            })
+
+        })
+
+        function datePickerSelector() {
+            $('#datepicker').datepicker({
+                format: 'yyyy-mm-dd',
+                startView: 0,
+                todayBtn: false,
+                clearBtn: true,
+                autoclose: true,
+                todayHighlight: true
+            });
+        }
+
+    </script>
+{% endblock scripts %}
+

@@ -13,7 +13,17 @@ urlpatterns = [
         name="auth_login"
     ),
     path(
-        'dashboard/',
+        "logout/",
+        views.LogoutView.as_view(),
+        name="logout"
+    ),
+    path(
+        'loan_book/',
+        views.LoanBookView.as_view(),
+        name="loan_book"
+    ),
+    path(
+        'dashboard', 
         views.DashboardView.as_view(),
         name="dashboard"
     ),
@@ -26,5 +36,15 @@ urlpatterns = [
         'add_new_borrower/',
         views.CreateNewBorrower.as_view(),
         name="add_new_borrower"
+    ),
+    path(
+        'loans/',
+        views.LoansView.as_view(),
+        name="loans"
+    ),
+    path(
+        'loan/<int:loan>/',
+        views.ViewOneLoan.as_view(),
+        name="loan"
     )
 ]

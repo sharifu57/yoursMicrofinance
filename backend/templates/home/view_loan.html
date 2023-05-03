@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<div class="pt-3">
+    
+    {% if loan.borrower.first_name %}
+        <div class="d-flex justify-content-between text-center align-items-center">
+            <div>
+                <p>{{loan.borrower.first_name}} {{loan.borrower.last_name}}/{{loan.amount|intcomma}}</p>
+            </div>
+            <div>
+                
+                {% if loan.status == '2' %}
+                    <a href="">
+                        <button type="button" class="btn btn-success btn-sm">Approved</button>
+                    </a>
+                {% else %}
+                    <a href="">
+                        <button type="button" class="btn btn-primary btn-sm">Waiting</button>
+                    </a>
+                {% endif %}
+                    
+            </div>
+        </div>
+    {% else %}
+        <div class="d-flex justify-content-between text-center align-items-center">
+            <div>
+                <p class="" style="font-weight: 600;">{{loan.amount|intcomma}} Tzs</p>
+            </div>
+            <div>
+                <p>approve</p>
+            </div>
+        </div>
+    {% endif %}
+
+</div>
+
+<div class="pt-3">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card card-default">
+                <div class="card-header" style="background-color: black;">
+                    <p style="font-weight: 500; font-size: 14px;">LOAN SUMMARY</p>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between text-center align-items-center">
+                        <div>
+                            <p style="font-size: 13px;">Client Name: </p>
+                        </div>
+                        <div>
+                            <p style="font-size: 13px;">{{loan.borrower.first_name|upper}} {{loan.borrower.last_name|upper}}</p>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between text-center align-items-center">
+                        <div>
+                            <p style="font-size: 13px;">Identity: </p>
+                        </div>
+                        <div>
+                            <p style="font-size: 13px;">{{loan.borrower.identity}}</p>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between text-center align-items-center">
+                        <div>
+                            <p style="font-size: 13px">Loan Amount: </p>
+                        </div>
+                        <div>
+                            <p style="font-size: 13px;">{{loan.amount|intcomma}} Tzs</p>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between text-center align-items-center">
+                        <div>
+                            <p style="font-size: 13px">Interest Rate: </p>
+                        </div>
+                        <div>
+                            <p style="font-size: 13px;">{{loan.interest_rate}} %</p>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between text-center align-items-center">
+                        <div>
+                            <p style="font-size: 13px">Interest: </p>
+                        </div>
+                        <div>
+                            <p style="font-size: 13px;">{{loan.interest_amount|intcomma}} Tzs</p>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between text-center align-items-center">
+                        <div>
+                            <p style="font-size: 13px">Start From: </p>
+                        </div>
+                        <div>
+                            <p style="font-size: 13px;">{{loan.start_date}}</p>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between text-center align-items-center">
+                        <div>
+                            <p style="font-size: 13px">End Date: </p>
+                        </div>
+                        <div>
+                            <p style="font-size: 13px;">{{loan.end_date}}</p>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between text-center align-items-center">
+                        <div>
+                            <p style="font-size: 13px">Total Return: </p>
+                        </div>
+                        <div>
+                            <p style="font-size: 13px;">{{loan.total_interest_amount|intcomma}} Tzs</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            
+        </div>
+    </div>
+</div>
+<div class="pt-3">
+    <div>
+        <p>Loan Payments</p>
+    </div>
+    <div class="card card-default">
+        <div class="card-header">
+            <div class="d-flex justify-content-between text-center align-items-center">
+                <div>
+                    <h6>Search Bar</h6>
+                </div>
+                <div>
+                    <p>Right</p>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Payment Date</th>
+                      <th scope="col">Last Name</th>
+                      <th scope="col">Amount</th>
+                      <th scope="col">From</th>
+                      <th scope="col">To</th>
+                      <th scope="col">Status</th>
+                      <th scope="col">Action</th>
+  
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    {% if payments %}
+                        
+                        {% for payment in payments %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ payment.payment_date }}</td>
+                                <td>{{ payment.payment_number }}</td>
+                            </tr>
+                        {% endfor %}
+                            
+                    {% else %}
+                        <tr id="not-bills-table-items">
+                            <td colspan="10">
+                                <div class="alert alert-info text-center">
+                                    <h3>No Payments Made ...</h3>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endif %}
+                        
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock content %}

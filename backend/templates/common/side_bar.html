@@ -1,5 +1,37 @@
-<nav id="sidebarMenu" class="sidebar d-lg-block text-white collapse" data-simplebar style="background-color: rgb(203, 94, 94);">
+<nav id="sidebarMenu" class="sidebar d-lg-block text-white collapse" data-simplebar style="background-color: #1372f7;">
     <div class="sidebar-inner px-4 pt-3">
-      <p>side bar</p>
+      <div class="sidebar">
+        <div class="col pt-4">
+          <h3 class="text-center">LOGO</h3>
+        </div>
+        <hr>
+        <ul class="nav flex-column" style="padding: 10px;">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'dashboard' %}" style="font-size: 15px;">
+              <i class="fas fa-home" style="padding-right: 10px; color: grey;"></i> Dashboard
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'loan_book' %}" style="font-size: 15px;">
+              <i class="fas fa-user" style="padding-right: 10px; color: grey;"></i> Loan Book
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" style="font-size: 15px;">
+              <i class="fas fa-cog" style="padding-right: 10px; color: grey;"></i> Savings
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" style="font-size: 15px;">
+              <i class="fas fa-cog" style="padding-right: 10px; color: grey;"></i> Members
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="" style="font-size: 15px;">
+              <i class="fas fa-cog" style="padding-right: 10px; color: grey;"></i> Reports
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
   </nav>
