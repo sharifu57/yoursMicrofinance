@@ -265,9 +265,6 @@ class LoansView(MainView):
         interest_rate = None
         total_interest_amount = None
         loans  = Loan.objects.filter(is_active=True, is_deleted=False).order_by('-created')
-       
-        
-        
         if loans:
             for loan in loans:
                 amount = loan.amount
@@ -294,18 +291,86 @@ class ViewOneLoan(MainView):
         loan = Loan.objects.get(
             id=self.kwargs.get('loan')
         )
-        
-        payments = LoanPayment.objects.filter(
+        payment = LoanPayment.objects.filter(
             is_active=True,
             is_deleted=False,
             loan = loan
         ).order_by('created')
+        
+        loans = Loan.objects.filter(
+            is_active=True, 
+            is_deleted=False,
+            id=self.kwargs.get('loan')
+        )
+        payment_sum = payment.aggregate(total=Sum('payment_amount'))
+        loan_sum = loans.aggregate(total=Sum('amount'))
+    
+        try:     
+            remaining_amount = loan_sum['total'] - payment_sum['total']
+        except(TypeError, KeyError) as e:
+            print(f"An error occurred while calculating the remaining amount: {str(e)}")
+            remaining_amount = None
+        
+        #  revenue_amount = loan_sum['total'] + interest_amount['total']
+        
 
         context = {
             'loan': loan,
-            'payments': payments
+            'payment': payment,
+            'payment_sum': payment_sum,
+            'remaining_amount': remaining_amount
         }
         
         return render(request, 'home/view_loan.html', context)
+    
+    
+class CreatePaymentView(MainView):
+    def get(self, request, *args, **kwargs):
+        form = LoanPaymentForm()
+        loan_id = kwargs.get('loan')
+        if loan_id:
+            loan_id=loan_id
+            
+            
+        context = {
+           'form': form,
+           'loan_id': loan_id
+        }
+        return render(request, 'home/create_payment.html', context)
+    
+    def post(self, request, *args, **kwargs):
+        form = LoanPaymentForm(
+            request.POST
+        )       
+     
+        loan_id = kwargs.get('loan')
+        if loan_id:
+            loan_id=loan_id
+            
+    
+        if form.is_valid():
+            payment = LoanPayment()
+            loan = Loan.objects.get(id=loan_id)
+            payment.payment_amount = request.POST['payment_amount']
+            payment.payment_method = request.POST['payment_method']
+            payment.loan = Loan.objects.get(id=loan_id) 
+            payment.principal_amount = float(loan.amount) - float(payment.payment_amount)
+            payment.payment_number = generate_payment_number()
+            payment.save()
+            payment.refresh_from_db()
+            info = {
+                'status': True,
+                'message': 'Success Created'
+            }
+            
+            return HttpResponse(json.dumps(info))
+        
+        info = {
+            'status': False,
+            'message': 'Failed to Create Payment'
+        }
+        return HttpResponse(json.dumps(info))
+        
+        
         
         

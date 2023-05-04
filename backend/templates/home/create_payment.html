@@ -1,0 +1,24 @@
+<!-- <div class="create-new-payment-form">
+    <p>new payment</p>
+</div> -->
+<form class="create-new-payment-form" action="{% url 'create_payment' loan_id %}" enctype="multipart/form-data" method="post" novalidate>
+    {% csrf_token %}
+    {% load widget_tweaks %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="">Payment Amount</label>
+                    {% render_field form.payment_amount class="form-control" style="border-radius: 20px" %}
+                </div>
+            </div>
+            <div class="col-md-12 pt-3">
+                <div class="form-group">
+                    <label for="">Payment Method</label>
+                    {% render_field form.payment_method class="form-control" style="border-radius: 20px" %}
+                    <span class="text-danger">{{ form.category.errors }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

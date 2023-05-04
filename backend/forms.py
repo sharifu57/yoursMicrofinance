@@ -108,6 +108,30 @@ class LoanBorrowerForm(forms.ModelForm):
         form = super(LoanBorrowerForm, self).save(*args, **kwargs, commit=False)
         form.save()
         return form
+    
+
+class LoanPaymentForm(forms.ModelForm):
+    """Form definition for LoanPayment."""
+
+    class Meta:
+        """Meta definition for LoanPaymentform."""
+
+        model = LoanPayment
+        fields = ['payment_amount','payment_method']
+        
+    def __init__(self, *args, **kwargs):
+        super(LoanPaymentForm, self).__init__(*args, **kwargs)
+        self.fields['payment_amount'].required=True
+        self.fields['payment_method'].required=True
+
+    def clean(self):
+        payment_amount = self.cleaned_data.get('payment_amount')
+        payment_method = self.cleaned_data.get('payment_method')
+        
+        if payment_amount is None:
+            self.errors['payment_amount'] = "Please provide this Amount"
+            
+        
         
     
         

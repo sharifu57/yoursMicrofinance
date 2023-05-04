@@ -135,17 +135,19 @@ PAYMENT_STATUS = (
     (3, 'Late')
 ) 
 
+PAYMENT_METHOD = (
+    (1, 'Cash'),
+    (2, 'Bank'),
+    (3, 'Mobile')
+)
+
 class LoanPayment(MainModel):
     loan = models.ForeignKey('backend.loan', null=True, blank=True, on_delete=models.CASCADE)
     payment_number = models.CharField(max_length=200, null=True, blank=True)
     payment_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     # the amount that lowers the loan balance of a customer amount
     principal_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True) 
-    # This is the cumulative amount of interest paid up to the current payment.
-    total_interest_paid = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    # This is the cumulative amount of principal paid up to the current payment.
-    total_principal_paid = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    remaining_balance = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True)
+    payment_method = models.IntegerField(null=True, blank=True, choices = PAYMENT_METHOD)
     payment_date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     late_fee = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     status = models.IntegerField(choices=PAYMENT_STATUS, null=True, blank=True)

@@ -109,12 +109,36 @@
                             <p style="font-size: 13px;">{{loan.total_interest_amount|intcomma}} Tzs</p>
                         </div>
                     </div>
+                    <div class="d-flex justify-content-between text-center align-items-center">
+                        <div>
+                            <p style="font-size: 13px">DOCUMENT: </p>
+                        </div>
+                        <div>
+                            {{loan.id}}
+                        </div>
+                    </div>
 
                 </div>
             </div>
         </div>
         <div class="col-md-6">
-            
+            <h1>
+                Remaining Balance
+            </h1>
+            <div>
+                
+                {% if remaining_amount %}
+                    {% if loan.amount < payment.payment_amount %}
+                        <h3 style="color: red;">{{remaining_amount|intcomma}}</h3>
+                    {% else %}
+                        <h3 >{{remaining_amount|intcomma}}</h3>
+                    {% endif %}
+                {% else %}
+                    <p>no payment yet..</p>
+                {% endif %}
+                    
+                    
+            </div>
         </div>
     </div>
 </div>
@@ -129,7 +153,9 @@
                     <h6>Search Bar</h6>
                 </div>
                 <div>
-                    <p>Right</p>
+                    <a href="javascript:" data-href="{% url 'create_payment' loan.id %}" class="new-payment-link">
+                        <button class="btn btn-primary me-md-2" type="button" style="border-radius: 20px;">Create Payment</button>
+                    </a>
                 </div>
             </div>
         </div>
@@ -139,10 +165,10 @@
                     <tr>
                       <th scope="col">#</th>
                       <th scope="col">Payment Date</th>
-                      <th scope="col">Last Name</th>
+                      <th scope="col">Payment Number</th>
                       <th scope="col">Amount</th>
-                      <th scope="col">From</th>
-                      <th scope="col">To</th>
+                      <th scope="col">Payment Method</th>
+                      <th scope="col">Remaining</th>
                       <th scope="col">Status</th>
                       <th scope="col">Action</th>
   
@@ -150,13 +176,18 @@
                 </thead>
                 <tbody>
                     
-                    {% if payments %}
+                    {% if payment %}
                         
-                        {% for payment in payments %}
+                        {% for payment in payment %}
                             <tr>
                                 <td>{{ forloop.counter }}</td>
                                 <td>{{ payment.payment_date }}</td>
                                 <td>{{ payment.payment_number }}</td>
+                                <td>{{ payment.payment_amount|intcomma }}</td>
+                                <td>{{ payment.payment_method }}</td>
+                                <td>{{ payment.principal_amount|intcomma }}</td>
+                                <td>{{ payment.status }}</td>
+                                <td>action</td>
                             </tr>
                         {% endfor %}
                             
@@ -175,4 +206,39 @@
         </div>
     </div>
 </div>
+<div class="pt-3">
+
+</div>
 {% endblock content %}
+
+
+{% block scripts %}
+<!-- <script src="{% static 'assets/borrower/add_borrower.js' %}"></script> -->
+    <script src="/static/assets/js/helpers.js"></script>
+    <script>
+        $(function(){
+            $(document).on('click', '.new-payment-link', function() {
+            let url = $(this).data('href');
+            let title = "CREATE PAYMENT";   
+            let columnClass = "col-md-7"
+            let formSelector = ".create-new-payment-form"
+            let containerFluid = false
+
+            ajaxPost(title, url, columnClass, containerFluid, formSelector);
+            })
+        });
+
+    
+        function datePickerSelector() {
+            $('#datepicker').datepicker({
+                format: 'yyyy-mm-dd',
+                startView: 0,
+                todayBtn: false,
+                clearBtn: true,
+                autoclose: true,
+                todayHighlight: true
+            });
+        }
+
+    </script>
+{% endblock scripts %}
