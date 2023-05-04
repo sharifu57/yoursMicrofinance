@@ -33,7 +33,7 @@ function ajaxGet(title, url, columnClass, containerFluid) {
         content: "url:" + url,
         columnClass: columnClass,
         containerFluid: containerFluid,
-        type: "red",
+        type: "dark",
         offsetTop: 1,
         //offsetBottom: 1,
         onContentReady: function () {
@@ -59,14 +59,14 @@ function ajaxGet(title, url, columnClass, containerFluid) {
 
 function ajaxConfirm(title, url, content) {
     $.confirm({
-        type: "red",
+        type: "dark",
         title: title,
         closeIcon: true,
         content: content,
         buttons: {
             confirm: {
                 text: "Confirm",
-                btnClass: "btn btn-danger",
+                btnClass: "btn btn-dark",
                 action: function () {
                     let self = this;
                     self.showLoading();
@@ -78,7 +78,7 @@ function ajaxConfirm(title, url, content) {
                         try {
                             let data = JSON.parse(response);
                             if (data.status) {
-                                self.setType("green");
+                                self.setType("dark");
                                 self.setTitle('Success');
                                 self.setContent(data.message);
                                 self.$$confirm.hide();

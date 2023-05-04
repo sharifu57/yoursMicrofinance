@@ -49,6 +49,8 @@
                                 <td>
                                     {% if loan.status == 3 %}
                                         <span class="badge bg-danger">{{loan.get_status_display}}</span>
+                                    {% elif loan.status == 2 %}
+                                      <span class="badge bg-primary">{{loan.get_status_display}}</span>
                                     {% else %}
                                         <span class="badge bg-success">{{loan.get_status_display}}</span>
                                     {% endif %}

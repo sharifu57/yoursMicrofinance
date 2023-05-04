@@ -150,7 +150,7 @@ class LoanPayment(MainModel):
     payment_method = models.IntegerField(null=True, blank=True, choices = PAYMENT_METHOD)
     payment_date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     late_fee = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    status = models.IntegerField(choices=PAYMENT_STATUS, null=True, blank=True)
+    status = models.IntegerField(choices=PAYMENT_STATUS, null=True, blank=True, default=1)
     
     def __str__(self):
         

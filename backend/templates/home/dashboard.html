@@ -21,7 +21,10 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    one
+                    <div class="card-header">
+                        <p style="font-weight: 700; font-size: 12px;">Interest</p> <br>
+                        <h2>{{members}}</h2>
+                    </div>
                 </div>
             </div>
         </div>
@@ -30,6 +33,9 @@
     <div class="col-md-3">
         <div class="card card-default card-body" style="border-color: white; border-radius: 0px;">
             <p class="text-bold" style="font-weight: 600;">Total Loan</p>
+            <div class="card text-white card-body bg-primary">
+                <h5>{{loan_sum.total|intcomma}} Tzs</h5>
+            </div>
         </div>
     </div>
 </div>

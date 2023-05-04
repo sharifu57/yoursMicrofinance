@@ -90,7 +90,8 @@ class DashboardView(MainView):
         context = {
             'title': title,
             'revenue_amount': revenue_amount,
-            'members': members
+            'members': members,
+            'loan_sum': loan_sum
         }
         
         return render(request, 'home/dashboard.html', context)
@@ -295,7 +296,7 @@ class ViewOneLoan(MainView):
             is_active=True,
             is_deleted=False,
             loan = loan
-        ).order_by('created')
+        ).order_by('-created')
         
         loans = Loan.objects.filter(
             is_active=True, 
@@ -368,6 +369,19 @@ class CreatePaymentView(MainView):
         info = {
             'status': False,
             'message': 'Failed to Create Payment'
+        }
+        return HttpResponse(json.dumps(info))
+    
+    
+class ConfirmLoan(MainView):
+    def get(self, request, *args, **kwargs):
+        loan = Loan.objects.get(id=self.kwargs.get('loan'))
+        loan.status = 2
+        loan.save()
+        
+        info = {
+            'status': True,
+            'message': 'Loan Approved'
         }
         return HttpResponse(json.dumps(info))
         

@@ -12,13 +12,14 @@
             </div>
             <div>
                 
-                {% if loan.status == '2' %}
-                    <a href="">
+                {% if loan.status == 2 %}
+                    <p>Approved</p>
+                    <!-- <a href="">
                         <button type="button" class="btn btn-success btn-sm">Approved</button>
-                    </a>
+                    </a> -->
                 {% else %}
-                    <a href="">
-                        <button type="button" class="btn btn-primary btn-sm">Waiting</button>
+                    <a href="javascript:" data-href="{% url 'approve_loan' loan.id %}" class="confirm-approve-link">
+                        <button type="button" class="btn btn-primary btn-sm">Approve</button>
                     </a>
                 {% endif %}
                     
@@ -30,7 +31,7 @@
                 <p class="" style="font-weight: 600;">{{loan.amount|intcomma}} Tzs</p>
             </div>
             <div>
-                <p>approve</p>
+                <!-- <p>approve</p> -->
             </div>
         </div>
     {% endif %}
@@ -123,7 +124,7 @@
         </div>
         <div class="col-md-6">
             <h1>
-                Remaining Balance
+                Remaining Loan
             </h1>
             <div>
                 
@@ -142,6 +143,7 @@
         </div>
     </div>
 </div>
+
 <div class="pt-3">
     <div>
         <p>Loan Payments</p>
@@ -184,9 +186,29 @@
                                 <td>{{ payment.payment_date }}</td>
                                 <td>{{ payment.payment_number }}</td>
                                 <td>{{ payment.payment_amount|intcomma }}</td>
-                                <td>{{ payment.payment_method }}</td>
+                                <td>
+                                    
+                                    {% if payment.payment_method == 1 %}
+                                        <span class="badge bg-success">CASH</span>
+                                    {% elif payment.payment_method == 2 %}
+                                        <span class="badge bg-success">BANK</span>
+                                    {% else %}
+                                        <span class="badge bg-success">MOBILE MONEY</span>
+                                        
+                                        {% if payment.payment_method == 3  %}
+                                            <span>#phone number</span>
+                                        {% endif %}
+                                            
+                                    {% endif %}
+                                </td>
                                 <td>{{ payment.principal_amount|intcomma }}</td>
-                                <td>{{ payment.status }}</td>
+                                <td>
+                                    {% if payment.status == 1 %}
+                                        <span class="badge bg-success">{{payment.get_status_display}}</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">{{payment.get_status_display}}</span>
+                                    {% endif %}
+                                </td>
                                 <td>action</td>
                             </tr>
                         {% endfor %}
@@ -206,6 +228,8 @@
         </div>
     </div>
 </div>
+
+    
 <div class="pt-3">
 
 </div>
@@ -226,6 +250,15 @@
 
             ajaxPost(title, url, columnClass, containerFluid, formSelector);
             })
+        });
+
+        $(document).on("click", ".confirm-approve-link", function (e) {
+            e.preventDefault();
+            let title = "Approve Loan";
+            let url = $(this).data('href');
+            let content = "Are you Sure?";
+            
+            ajaxConfirm(title, url, content);
         });
 
     

@@ -51,5 +51,10 @@ urlpatterns = [
         'create_payment/<int:loan>/',
         views.CreatePaymentView.as_view(),
         name="create_payment"
+    ),
+    path(
+        'approve_loan/<int:loan>/',
+        views.ConfirmLoan.as_view(),
+        name="approve_loan"
     )
 ]
