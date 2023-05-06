@@ -11,9 +11,11 @@ from django.db.models import Sum
 import pendulum
 import random
 from backend.models import *
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 import json
 import pendulum
+from django.conf import settings
+
 # Create your views here.
 
 class MainView(View):
@@ -87,11 +89,31 @@ class DashboardView(MainView):
         
         members = Borrower.objects.all().count()
         
+        loan_data = Loan.objects.values('amount', 'borrower__first_name').order_by('-created')[:6]
+        payment_data = LoanPayment.objects.values('payment_amount', 'loan__amount').order_by('-created')[:6]
+        loan_json = json.dumps(
+            list(loan_data), 
+            indent=4, 
+            sort_keys=True, 
+            default=str
+        )
+        payment_json = json.dumps( 
+            list(payment_data),
+            indent=4, 
+            sort_keys=True, 
+            default=str
+        )
+        
+        print("****payment json")
+        print(payment_json)
         context = {
             'title': title,
             'revenue_amount': revenue_amount,
             'members': members,
-            'loan_sum': loan_sum
+            'loan_sum': loan_sum,
+            'interest_amount': interest_amount,
+            'loan_data': loan_json,
+            'payment_data': payment_json
         }
         
         return render(request, 'home/dashboard.html', context)
@@ -384,6 +406,56 @@ class ConfirmLoan(MainView):
             'message': 'Loan Approved'
         }
         return HttpResponse(json.dumps(info))
+    
+class MembersView(MainView):
+    def get(self, request, *args, **kwargs):
+        borrowers = Borrower.objects.all()
+        
+        context = {
+            'borrowers': borrowers
+        }
+        return render(request, 'home/members.html', context)
+    
+
+class ReportView(MainView):
+    def get(self, request, *args, **kwargs):
+    
+        if 'start_date' in request.GET:
+            start_date = request.GET.get('start_date', None)
+            print("*****start_date")
+            print(start_date)
+            if start_date:
+                start_date = pendulum.from_format(start_date, 'YYYY-MM-DD')
+            else:
+                None
+                
+        else:
+            print("-------no data")
+                
+        if 'end_date' in request.GET:
+            end_date = request.GET.get('end_date', None)
+            print("*****start_date")
+            print(end_date)
+            if end_date:
+                end_date = pendulum.from_format(end_date, 'YYYY-MM-DD')
+            else:
+                None
+        else:
+            print("-------none data")
+            
+            
+        context = {
+            "system_path": settings.DOCUMENT_SYSTEM_IP
+        }
+    
+        return render(request, 'home/report.html', context)
+    
+    
+
+    
+
+
+    
         
         
         

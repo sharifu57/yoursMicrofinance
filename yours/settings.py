@@ -31,15 +31,20 @@ PRODUCTION = False
 if PRODUCTION:
     HOST_IP = '192.168.0.60'
     HOST_ADDR = f"http://{HOST_IP}:5000"
+    DOCUMENT_SYSTEM_IP = f"http://{HOST_IP}:5000"
     STATE_INDEX = 1
 
 else:
-    HOST_IP = '192.168.2.46'
+    HOST_IP = '192.168.2.20'
     HOST_ADDR = f"http://{HOST_IP}:5000"
+    DOCUMENT_SYSTEM_IP = f"http://{HOST_IP}:5000"
     STATE_INDEX = 0
 
 STATES = ["uat", "production"]
 SYSTEM_STATE = STATES[STATE_INDEX]
+
+SESSION_EXPIRE_SECONDS = 3600 # 5 minutes expire
+SESSION_EXPIRE_AT_BROWSER_CLOSE=True
 
 
 
@@ -56,7 +61,9 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'django.contrib.humanize',
     'pendulum',
-    'django_select2'
+    'django_select2',
+    'django_extensions',
+    'chartjs'
 ]
 
 MIDDLEWARE = [

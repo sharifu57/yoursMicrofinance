@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<div class="pt-3">
+    <div class="">
+        <div class="d-flex justify-content-between text-center align-items-center">
+            <div>
+                <h6>CLIENT MANAGEMENT</h6>
+            </div>
+            <div>
+                <a href="javascript:" data-href="{% url 'create_new_loan' %}" class="new-loan-link">
+                    <button class="btn btn-primary mb-3" type="button" style="border-radius: 20px;"> <span>+</span> Add Client</button>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div>
+        {% if borrowers %}
+            <div class="row">
+                {% for borrower in borrowers %}
+                <div class="col-md-3">
+                    <div class="card text-dark bg-light mb-3" style="max-width: 18rem;">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="col-auto">
+                                                
+                                        {% if borrower.picture %}
+                                            <img alt="" src="{{ borrower.picture.url   }}" class="rounded-circle" style="height: 30px; width:30px">
+                                        {% else %}
+                                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 30px; height: 30px; font-weight: bold;">
+                                            {{  borrower.first_name|slice:":1"|upper }}
+                                        </div>
+
+                                        {% endif %}
+                                            
+                                        
+                                    </div>
+                                </div>
+                                <div class="col-md-7">
+                                    <p style="font-size: 12px;">{{borrower.first_name|upper}} {{borrower.last_name|upper}}</p>
+                                </div>
+                                <div class="col-md-2">
+                                    :
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>            
+        {% endif %}
+    </div>
+</div>
+{% endblock content %}
