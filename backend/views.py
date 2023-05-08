@@ -15,6 +15,8 @@ from django.http import HttpResponse, JsonResponse
 import json
 import pendulum
 from django.conf import settings
+from django.core.paginator import Paginator
+from django.contrib.postgres.search import SearchVector
 
 # Create your views here.
 
@@ -288,6 +290,9 @@ class LoansView(MainView):
         interest_rate = None
         total_interest_amount = None
         loans  = Loan.objects.filter(is_active=True, is_deleted=False).order_by('-created')
+        search = request.GET.get('search', None)
+        page = request.GET.get('page', 1)
+        
         if loans:
             for loan in loans:
                 amount = loan.amount
@@ -299,11 +304,22 @@ class LoansView(MainView):
                     
                 else:
                     pass
+        
+        if request.GET.get('search'):
+            loans = loans.annotate(
+                search=SearchVector(
+                    'amount',
+                    'borrower__first_name',
+                    'borrower__last_name',
+                    'status'
+                )
+            ).filter(search=search)
             
-                    
-                
+        paginator = Paginator(loans, 10)
+      
         context = {
-            'loans': loans
+            'loans': paginator.page(page),
+            'search': search
         }
         
         return render(request, 'home/loans.html', context)
@@ -334,9 +350,6 @@ class ViewOneLoan(MainView):
             print(f"An error occurred while calculating the remaining amount: {str(e)}")
             remaining_amount = None
         
-        #  revenue_amount = loan_sum['total'] + interest_amount['total']
-        
-
         context = {
             'loan': loan,
             'payment': payment,
@@ -404,6 +417,18 @@ class ConfirmLoan(MainView):
         info = {
             'status': True,
             'message': 'Loan Approved'
+        }
+        return HttpResponse(json.dumps(info))
+    
+class RejectLoan(MainView):
+    def get(self, request, *args, **kwargs):
+        loan = Loan.objects.get(id=self.kwargs.get('loan'))
+        loan.status = 3
+        loan.save()
+        
+        info = {
+            'status':True,
+            'message': 'Loan Rejected'
         }
         return HttpResponse(json.dumps(info))
     

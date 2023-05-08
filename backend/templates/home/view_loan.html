@@ -12,18 +12,32 @@
             </div>
             <div>
                 
-                {% if loan.status == 2 %}
-                    <p>Approved</p>
-                    <!-- <a href="">
-                        <button type="button" class="btn btn-success btn-sm">Approved</button>
-                    </a> -->
+                {% if loan.status == 3 %}
+                    <p style="color: red;">Rejected</p>
                 {% else %}
-                    <a href="javascript:" data-href="{% url 'approve_loan' loan.id %}" class="confirm-approve-link">
-                        <button type="button" class="btn btn-primary btn-sm">Approve</button>
-                    </a>
+                <div class="d-flex justify-content-between text-center align-items-center">
+                    <div class="mr-2">
+                        {% if loan.status == 2 %}
+                            <p>Approved</p>
+                        {% else %}
+                            <a href="javascript:" data-href="{% url 'approve_loan' loan.id %}" class="confirm-approve-link">
+                                <button type="button" class="btn btn-primary btn-sm">Approve</button>
+                            </a>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="ml-1" style="margin-left: 5px;">
+                        <a href="javascript:" data-href="{% url 'reject_loan' loan.id %}" class="confirm-reject-link">
+                            <button type="button" class="btn btn-danger btn-sm">Reject</button>
+                        </a>
+                    </div>
+                </div>
                 {% endif %}
                     
+                
+                
             </div>
+            
         </div>
     {% else %}
         <div class="d-flex justify-content-between text-center align-items-center">
@@ -255,6 +269,15 @@
         $(document).on("click", ".confirm-approve-link", function (e) {
             e.preventDefault();
             let title = "Approve Loan";
+            let url = $(this).data('href');
+            let content = "Are you Sure?";
+            
+            ajaxConfirm(title, url, content);
+        });
+
+        $(document).on("click", ".confirm-reject-link", function (e) {
+            e.preventDefault();
+            let title = "Reject Loan";
             let url = $(this).data('href');
             let content = "Are you Sure?";
             

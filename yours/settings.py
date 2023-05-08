@@ -63,7 +63,9 @@ INSTALLED_APPS = [
     'pendulum',
     'django_select2',
     'django_extensions',
-    'chartjs'
+    'chartjs',
+    'smart_pagination',
+    'viewflow'
 ]
 
 MIDDLEWARE = [

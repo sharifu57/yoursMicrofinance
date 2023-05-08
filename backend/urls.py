@@ -58,6 +58,11 @@ urlpatterns = [
         name="approve_loan"
     ),
     path(
+      'reject_loan/<int:loan>/',
+      views.RejectLoan.as_view(),
+      name="reject_loan"  
+    ),
+    path(
         'members/',
         views.MembersView.as_view(),
         name="members"
