@@ -27,9 +27,9 @@
                                                 <span class="fas fa-user"></span>
                                             </span>
                                             {% render_field form.username class="form-control" autocomplete="off" %}
-                                            <span class=" text-danger">
+                                            <!-- <span class=" text-danger">
                                                {{form.username.errors}}
-                                            </span>
+                                            </span> -->
                                         </div>
                                     </div>
 
@@ -42,16 +42,30 @@
                                                 <span class="fas fa-key"></span>
                                             </span>
                                             {% render_field form.password class="form-control" autocomplete="off" %}
-                                            <span class=" text-danger">
+                                            <!-- <span class=" text-danger">
                                                 {{form.password.errors}}
-                                            </span>
+                                            </span> -->
                                         </div>
                                     </div>
-
+                                    <!-- {{form.errors}} -->
                                     <div class="d-grid">
                                         <button type="submit" name="submit" class="btn" style="border-radius: 0px; background-color: rgb(247, 185, 0);">Log In</button>
                                     </div>
                                 </form>
+                                
+                                {% if form.errors %}
+                                    <div class="alert alert-danger">
+                                        <ul>
+                                            {% for field in form %}
+                                                {% for error in field.errors %}
+                                                    <li>{{ error }}</li>
+                                                {% endfor %}
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                {% endif %}
+
+                                    
                             </div>
                         </div>
                     </div>

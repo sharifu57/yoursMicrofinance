@@ -17,8 +17,9 @@ class AuthenticationForm(forms.ModelForm):
 
 
     def clean(self):
-        username = str(self.cleaned_data.get("username")).strip().replace(" ", "").lower()
-        password = str(self.cleaned_data.get("password")).strip().replace(" ", "").lower()
+        cleaned_data = super().clean()
+        username = cleaned_data.get("username").strip().replace(" ", "").lower()
+        password = cleaned_data.get("password").strip().replace(" ", "").lower()
 
         if User.objects.filter(Q(username=username)| Q(email=username) | Q(password = password)).exists():
             user_login = User.objects.filter(Q(username=username)|Q(email=username)).first()
