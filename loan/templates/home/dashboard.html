@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<div class="row pt-3">
+    <div class="col-md-9">
+        <div class="card card-default card-body" style="border-color: white;">
+            <h7 class="text-bold" style="font-weight: 600; font-size: 13px;">{{title|upper}}</h7>
+            <div class="row pt-4">
+                <div class="col-md-4">
+                    <div class="card-header">
+                        <p style="font-weight: 700; font-size: 12px;">REVENUE</p> <br>
+                        <h3>{{revenue_amount|intcomma}}</h3>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card-header">
+                        <p style="font-weight: 700; font-size: 12px;">INTEREST</p> <br>
+                        <h3>{{interest_amount.total|intcomma}}</h3>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card-header">
+                        <p style="font-weight: 700; font-size: 12px;">TOTAL LOANS</p> <br>
+                        <h3> {{loan_sum.total|intcomma}}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card card-default card-body" style="border-color: white; border-radius: 0px;">
+            <p class="text-bold" style="font-weight: 600;">CLIENTS</p>
+            <div class="card text-white card-body bg-primary">
+                <h6>{{members}} Active</h6>
+            </div>
+            <div class="card text-white card-body bg-primary mt-2">
+                <h6>0 Blocked</h6>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="pt-3">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card card-default card-body" style="border-color: white;">
+                <div class="row">
+                    <div class="col-md-10">
+                        <p class="text-bold" style="font-weight: 600; font-size: 13px;">Loan Analysis</p>
+                    </div>
+                    <div class="col-md-2">
+                        two
+                    </div>
+                </div>
+                <div>
+                    <canvas id="chart" width="500" height="500"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card card-default card-body" style="border-color: white;">
+                <div class="row">
+                    <div class="col-md-10">
+                        <p class="text-bold" style="font-weight: 600; font-size: 13px;">Payment Analysis</p>
+                    </div>
+                    <div class="col-md-2">
+                        two
+                    </div>
+                </div>
+                <div>
+                    <canvas id="new_chart" width="500" height="500"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="pt-3">
+
+</div>
+{% endblock content %}
+
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js"></script>
+<script>
+    const paymentData = {{payment_data|safe}};
+
+    let paymentLabels = [];
+    let loanAmount = [];
+
+    for(let j=0; j < paymentData.length; j++){
+        paymentLabels.push(paymentData[j].payment_amount);
+        loanAmount.push(paymentData[j].loan__amount);
+
+        console.log(paymentLabels)
+        console.log("_____payment")
+    }
+
+    let ctz = document.getElementById("new_chart").getContext("2d");
+    let new_chart = new Chart(ctz, {
+        type: "line",
+        data: {
+            labels: paymentLabels,
+            datasets: [
+                {
+                    label: "Gross volume ($)",
+                    backgroundColor: "#79AEC8",
+                    borderColor: "",
+                    data: loanAmount
+                }
+            ]
+        }, // <--- add the missing closing bracket here
+        options: {
+            title: {
+                text: "Gross Volume in 2020",
+                display: true
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        suggestedMin: 0,
+                        suggestedMax: 50000
+                    }
+                }]
+            }
+        }
+    });
+</script>
+
+<script>
+    const loanData = {{ loan_data|safe }};
+    let loanLabels = [];
+    let loanBorrowers = [];
+
+    for(let i=0; i < loanData.length; i++){
+        loanLabels.push(loanData[i].amount);
+        loanBorrowers.push(loanData[i].borrower__first_name);
+    }
+    let ctx = document.getElementById("chart").getContext("2d");
+    let chart = new Chart(ctx, {
+    type: "bar",
+    data: {
+        labels: loanBorrowers,
+        datasets: [
+            {
+            label: "Gross volume ($)",
+            backgroundColor: "#79AEC8",
+            borderColor: "#417690",
+            data: loanLabels
+            }
+        ]
+    },
+        options: {
+            title: {
+                text: "Gross Volume in 2020",
+                display: true
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        suggestedMin: 0,
+                        suggestedMax: 50000
+                    }
+                }]
+            }
+        }
+    });
+</script>
+{% endblock scripts %}
+    

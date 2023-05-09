@@ -57,7 +57,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'backend',
+    'account',
     'widget_tweaks',
     'django.contrib.humanize',
     'pendulum',
@@ -65,7 +65,8 @@ INSTALLED_APPS = [
     'django_extensions',
     'chartjs',
     'smart_pagination',
-    'viewflow'
+    'viewflow',
+    'loan'
 ]
 
 MIDDLEWARE = [
