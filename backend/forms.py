@@ -17,15 +17,14 @@ class AuthenticationForm(forms.ModelForm):
 
 
     def clean(self):
-        cleaned_data = super().clean()
-        username = cleaned_data.get("username").strip().replace(" ", "").lower()
-        password = cleaned_data.get("password").strip().replace(" ", "").lower()
+        username = str(self.cleaned_data.get("username")).strip().replace(" ", "").lower()
+        password = str(self.cleaned_data.get("password")).strip().replace(" ", "").lower()
 
         if User.objects.filter(Q(username=username)| Q(email=username) | Q(password = password)).exists():
             user_login = User.objects.filter(Q(username=username)|Q(email=username)).first()
             user = authenticate(username = user_login.username, password = password)
             if not user or not user.is_active:
-                raise forms.ValidationError("Invalid username or password")
+                raise forms.ValidationError("username or password not active")
             
         else:
             raise forms.ValidationError("Invalid username or password")
