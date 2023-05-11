@@ -38,7 +38,15 @@ class StageHistory(MainModel):
         return str(self.stage) + str(f"--- {self.content_object}")
     
 
-# class FlowProcess(Process):
+class FlowProcess(Process):
+    code = models.CharField(max_length=200, null=True, blank=True)
+    content_type = models.ForeignKey(ContentType, on_delete=models.DO_NOTHING, null=True, blank=True)
+    object_id = models.PositiveIntegerField(null=True, blank=True)
+    content_object = GenericForeignKey()
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True, blank=True)
+    
+    def __str__(self):
+        return self.code
     
     
     
