@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group, Permission
 from django.db.models.query_utils import Q
 from django.contrib.auth import authenticate, login
 from django.core.validators import EmailValidator
@@ -137,6 +137,36 @@ class LoanPaymentForm(forms.ModelForm):
         if payment_amount is None:
             self.errors['payment_amount'] = "Please provide this Amount"
             
+            
+
+class RoleForm(forms.ModelForm):
+    """Form definition for Role."""
+    class Meta:
+        """Meta definition for Roleform."""
+        model = Group
+        fields = ['name']
+        
+        
+    def clean(self):
+        if hasattr(self.instance, 'pk'):
+            if Group.objects.filter(
+                    name__iexact=self.cleaned_data.get("name")).exclude(
+                        id=self.instance.pk).exists():
+                self._errors[
+                    'name'] = f"{self.cleaned_data.get('name')} Already Taken"
+        else:
+            if Group.objects.filter(
+                    name__iexact=self.cleaned_data.get("name")).exists():
+                self._errors[
+                    'name'] = f"{self.cleaned_data.get('name')} Already Taken"
+        return self.cleaned_data
+        
+    
+    def __init__(self, *args, **kwargs):
+        super(RoleForm, self).__init__(*args, **kwargs)
+        self.fields['name'].required = True
+    
+
         
         
     

@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<div class="card card-default mt-3" style="border-color: white;">
+    <div class="card-header">
+        <div class="d-flex justify-content-between">
+            <div> 
+                <h6>{{title}}</h6>
+            </div>
+            <div class="">
+                <div class="text-right">
+                    <a href="javascript:" data-href="{% url 'create_role' %}" class="new-role-link">
+                        <button class="btn btn-primary me-md-2" type="button" style="border-radius: 20px;">New Role</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive-xl">
+            <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Role</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Action</th>
+
+                  </tr>
+                </thead>
+                <tbody>
+                    
+                    {% if groups %}
+                        
+                        {% for group in groups %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{group.name|upper}}</td>
+                                <td>{{group.description}}</td>
+                                <td>
+                                    ACTIVE
+                                </td>
+                                <td>
+                                  <div class="btn-group">
+                                      <a href="" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                          <i class="fab fa-schlix"></i>
+                                      </a>
+                                      <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="">View Loan</a>
+                                        <a class="dropdown-item" href="#">Another action</a>
+                                        <a class="dropdown-item" href="#">Something else here</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="#">Separated link</a>
+                                      </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                            
+                    {% else %}
+                        <tr id="not-bills-table-items">
+                            <td colspan="10">
+                                <div class="alert alert-info text-center">
+                                    <h3>No roles Found ...</h3>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endif %}
+                        
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+    <script src="/static/assets/js/helpers.js"></script>
+    <script>
+        $(function(){
+            $(document).on('click', '.new-role-link', function() {
+            let url = $(this).data('href');
+            let title = "CREATE NEW ROLE";   
+            let columnClass = "col-md-7"
+            let formSelector = ".create-role-form"
+            let containerFluid = false
+
+            ajaxPost(title, url, columnClass, containerFluid, formSelector);
+            })
+        });
+        
+    </script>
+{% endblock scripts %}

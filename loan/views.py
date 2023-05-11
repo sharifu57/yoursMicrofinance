@@ -477,6 +477,47 @@ class ReportView(MainView):
         return render(request, 'home/report.html', context)
     
     
+class RoleView(MainView):
+    def get(self, request, *args, **kwargs):
+        title = 'ROLES & PERMISSION'
+        groups = Group.objects.all()
+        context = {
+            'title': title,
+            'groups': groups
+        }
+        return render(request, 'home/roles.html', context)
+    
+
+class CreateRoleView(MainView):
+    def get(self, request, *args, **kwargs):
+        form = RoleForm()
+        context = {
+            "form": form,
+        }
+        return render(request, 'home/add_role.html', context)
+    
+    def post(self, request, *args, **kwargs):
+        form = RoleForm(request.POST)
+        print("-----post Form")
+        if form.is_valid():
+            form.save()
+            
+            info = {
+                'status': True,
+                'message': 'Role Created Successfully'
+            }
+            
+            return HttpResponse(json.dumps(info))
+        
+        else:
+            info = {
+                'status': False,
+                'message': 'Failed to Create'
+            }
+            return HttpResponse(json.dumps(info))
+        
+        
+    
 
     
 

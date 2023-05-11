@@ -1,0 +1,17 @@
+<form class="create-role-form" action="{% url 'create_role'  %}" method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    {% load widget_tweaks %}
+    <div class="container-fluid">
+        <div class="form-group form-group-feedback form-group-feedback-left">
+
+            <label>Role/Group Name</label>
+            {% if form.name.field.widget.attrs.required %}
+            <i class="icon-star-full2 text-danger"></i>
+            {% endif %}
+            </label>
+            {% render_field form.name class="form-control" placeholder="Enter Role/Group Name ..." %}
+            <span class="text-danger">{{ form.name.errors }}</span>
+
+        </div>
+    </div>
+</form>

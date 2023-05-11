@@ -1,4 +1,4 @@
-<nav id="sidebarMenu" class="sidebar d-lg-block text-white collapse" data-simplebar style="background-color: #1372f7;">
+<nav id="sidebarMenu" class="sidebar d-lg-block text-white collapse" data-simplebar style="background-color: #000000;">
     <div class="sidebar-inner px-4 pt-3">
       <div class="sidebar">
         <div class="col pt-4">
@@ -32,10 +32,31 @@
             </a>
           </li>
           <li class="nav-item">
+            <a class="nav-link" href="{% url 'roles' %}" style="font-size: 15px;">
+              <i class="fas fa-cog" style="padding-right: 10px; color: grey;"></i> Roles
+            </a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" href="{% url 'reports' %}" style="font-size: 15px;">
               <i class="fas fa-cog" style="padding-right: 10px; color: grey;"></i> Reports
             </a>
           </li>
+          <hr>
+          <ul class="list-group" style="background-color: black;">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Config
+              <a href="#subitems1" class="btn btn-link" data-toggle="collapse">
+                <i class="fas fa-chevron-down"></i>
+              </a>
+            </li>
+            <div id="subitems1" class="collapse">
+              <ul class="list-group">
+                <li class="list-group-item">Subitem 1</li>
+                <li class="list-group-item">Subitem 2</li>
+                <li class="list-group-item">Subitem 3</li>
+              </ul>
+            </div>
+          </ul>
         </ul>
       </div>
     </div>

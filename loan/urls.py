@@ -71,5 +71,15 @@ urlpatterns = [
         'reports/',
         views.ReportView.as_view(),
         name="reports"
+    ),
+    path(
+        'roles',
+        views.RoleView.as_view(),
+        name="roles"
+    ),
+    path(
+        'create_role',
+        views.CreateRoleView.as_view(),
+        name="create_role"
     )
 ]

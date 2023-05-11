@@ -21,7 +21,8 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path(f"{settings.SYSTEM_STATE}", include('loan.urls'))
+    path("", include('loan.urls')),
+    path(f"{settings.SYSTEM_STATE}/account/", include('account.urls'))
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
