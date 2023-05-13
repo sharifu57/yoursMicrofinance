@@ -17,6 +17,7 @@ import pendulum
 from django.conf import settings
 from django.core.paginator import Paginator
 from django.contrib.postgres.search import SearchVector
+from workflow.flow import *
 
 # Create your views here.
 
@@ -263,6 +264,8 @@ class CreateNewLoanView(MainView):
             loan.document = request.FILES['document']
             loan.created_by = request.user
             loan.interest_amount = float(loan.amount) * (interest_rate/100)
+            flow_task = LoanApprovalFlow.start.run(request=request)
+            
 
             loan.save()
             loan.refresh_from_db()
@@ -271,7 +274,8 @@ class CreateNewLoanView(MainView):
             
             info = {
                 "status":True,
-                "message": "Success created"
+                "message": "Success created",
+                'flow_task': flow_task
             }
             
             return HttpResponse(json.dumps(info))
