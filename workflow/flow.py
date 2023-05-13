@@ -1,10 +1,23 @@
 from viewflow import flow
 from viewflow.base import this, Flow
 from loan.models import Loan
-from loan.views import *
+from loan.views import * 
 from viewflow.flow.views import StartFlowMixin
 from viewflow.models import Process
 
+
+class LoanApplicationFlow(Flow):
+    start = flow.Start(
+        StartFlowMixin,
+        fields = [],
+        task_title = 'Start this flow'
+    ).Next(
+        this.end
+    )
+    
+    end = flow.End()
+    
+    
 
 # class LoanApplicationFlow(flow.Flow):
 #     start = flow.start(my_view).Next(this.task)
@@ -12,27 +25,32 @@ from viewflow.models import Process
 #     check_status = flow.If(this.is_completed).then(this.end).Else(this.task)
 #     end = flow.end()
 
-class LoanApprovalFlow(Flow):
-    process_class = Loan
-    lock_impl = None
+# class LoanApprovalFlow(Flow):
+#     process_class = Loan
+#     lock_impl = None
     
-    start = flow.StartFunction(this.CreateNewLoanView).Next(this.approval_or_reject)
+#     start = flow.StartFunction(this.CreateNewLoanView).Next(this.approval_or_reject)
     
-    approval_or_reject = flow.View(
-        LoansView,
-        task_description = "Review the Loan Application" 
-    ).Permission(auto_correct=True).Next(this.check_approval)
+#     approval_or_reject = flow.View(
+#         this.start_flow,
+#         task_description = "Review the Loan Application" 
+#     ).Permission(auto_correct=True).Next(this.check_approval)
     
-    check_approval = flow.If(
-        cond=lambda act: act.process.is_approved,
-        task_title="Loan Approved"
-    ).Then(
-        this.end
-    ).Else(
-        this.reject_loan
-    )
+#     check_approval = flow.If(
+#         cond=lambda act: act.process.is_approved,
+#         task_title="Loan Approved"
+#     ).Then(
+#         this.end
+#     ).Else(
+#         this.reject_loan
+#     )
     
-    @classmethod
-    def reject_loan_action(cls, activation):
-        activation.process.status=='3'
-        activation.process.save()
+#     @classmethod
+#     def reject_loan_action(cls, activation):
+#         activation.process.status=='3'
+#         activation.process.save()
+        
+#     @classmethod
+#     def start_flow(cls, activation):
+#         return 
+        

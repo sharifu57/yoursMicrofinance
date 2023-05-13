@@ -79,11 +79,15 @@ PAYMENT_FREQUENCY = (
 )
 
 LOAN_STATUS = (
-    (1, 'Active'),
-    (2, 'Approved'),
-    (3, 'Rejected'),
-    (4, 'Waiting'),
-    (5, 'Applying')
+    (1, 'Submitted'),
+    (2, 'In Review'),
+    (3, 'Credit Worth'),
+    (4, 'Collateral'),
+    (5, 'Disbursement'),
+    (6, 'Approved'),
+    (7, 'Draft'),
+    (8, 'Active'),
+    (9, 'Rejected')
 )
 
 REPAYMENT_TERM = (
@@ -106,7 +110,7 @@ class Loan(MainModel):
     start_date = models.DateTimeField(null=True,blank=True)
     end_date = models.DateTimeField(null=True,blank=True)
     total_interest_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    status = models.IntegerField(choices=LOAN_STATUS, null=True, blank=True, default=5)
+    status = models.IntegerField(choices=LOAN_STATUS, null=True, blank=True, default=1)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):

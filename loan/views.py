@@ -17,7 +17,8 @@ import pendulum
 from django.conf import settings
 from django.core.paginator import Paginator
 from django.contrib.postgres.search import SearchVector
-from workflow.flow import *
+from loan.flow import *
+from viewflow.activation import Activation
 
 # Create your views here.
 
@@ -264,18 +265,14 @@ class CreateNewLoanView(MainView):
             loan.document = request.FILES['document']
             loan.created_by = request.user
             loan.interest_amount = float(loan.amount) * (interest_rate/100)
-            flow_task = LoanApprovalFlow.start.run(request=request)
             
 
             loan.save()
             loan.refresh_from_db()
             
-            print("----loan")
-            
             info = {
                 "status":True,
-                "message": "Success created",
-                'flow_task': flow_task
+                "message": "Success created"
             }
             
             return HttpResponse(json.dumps(info))
@@ -521,6 +518,10 @@ class CreateRoleView(MainView):
             return HttpResponse(json.dumps(info))
         
         
+class ApproveLoanTask(MainView):
+    def get(self, request, *args, **kwargs):
+        
+        return render(request, 'home/approved_loans')
     
 
     
