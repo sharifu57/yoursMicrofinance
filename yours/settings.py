@@ -35,7 +35,7 @@ if PRODUCTION:
     STATE_INDEX = 1
 
 else:
-    HOST_IP = '192.168.2.20'
+    HOST_IP = '192.168.2.46'
     HOST_ADDR = f"http://{HOST_IP}:5000"
     DOCUMENT_SYSTEM_IP = f"http://{HOST_IP}:5000"
     STATE_INDEX = 0
@@ -78,6 +78,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'loan.middleware.SessionExpirationMiddleware',
 ]
 
 ROOT_URLCONF = 'yours.urls'
@@ -121,6 +122,15 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+
+
+# settings.py
+
+# Set the session expiration time
+SESSION_COOKIE_AGE = 1800  # 30 minutes in seconds
+
+# Specify the URL to redirect to after session expiration
+LOGIN_URL = '/auth_login/'
 
 
 # Password validation

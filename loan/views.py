@@ -523,6 +523,11 @@ class ApproveLoanTask(MainView):
         
         return render(request, 'home/approved_loans')
     
+class ReviewLoanInformation(MainView):
+    def get(self, request, *args, **kwargs):
+        
+        return render(request, 'application/review_applicants_info.html')
+    
 
     
 

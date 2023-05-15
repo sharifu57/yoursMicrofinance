@@ -73,13 +73,18 @@ urlpatterns = [
         name="reports"
     ),
     path(
-        'roles',
+        'roles/',
         views.RoleView.as_view(),
         name="roles"
     ),
     path(
-        'create_role',
+        'create_role/',
         views.CreateRoleView.as_view(),
         name="create_role"
+    ),
+    path(
+        'review_loan_info/',
+        views.ReviewLoanInformation.as_view(),
+        name="review_loan_info"
     )
 ]

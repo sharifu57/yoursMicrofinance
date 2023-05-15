@@ -49,7 +49,7 @@
                 <div class="form-group">
                     <label for="" style="font-size: 13px;">Nida Number</label>
                     <div  class="input-group date" id="pickadate">
-                        {% render_field form.nida_number class="form-control" style="border-radius: 20px" %}
+                        {% render_field form.nida_number class="form-control" type="number" style="border-radius: 20px" %}
                         <span class="text-danger">{{ form.nida_number.errors }}</span>
                     </div>
                 </div>
@@ -74,7 +74,7 @@
             </div>
             <div class="col-md-12 pt-3">
                 <div class="form-group">
-                    <label for="" style="font-size: 13px;">Picture</label>
+                    <label for="" style="font-size: 13px;">Picture(Passport Size Picture)</label>
                     <div  class="input-group date" id="pickadate">
                         {% render_field form.picture class="form-control" style="border-radius: 20px" %}
                     </div>
