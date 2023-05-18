@@ -35,7 +35,7 @@ if PRODUCTION:
     STATE_INDEX = 1
 
 else:
-    HOST_IP = '192.168.2.46'
+    HOST_IP = '192.168.2.20'
     HOST_ADDR = f"http://{HOST_IP}:5000"
     DOCUMENT_SYSTEM_IP = f"http://{HOST_IP}:5000"
     STATE_INDEX = 0

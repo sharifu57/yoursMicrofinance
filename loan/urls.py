@@ -86,5 +86,10 @@ urlpatterns = [
         'review_loan_info/',
         views.ReviewLoanInformation.as_view(),
         name="review_loan_info"
+    ),
+    path(
+        'view_one_application/<int:loan>/',
+        views.ViewOneLoanApplication.as_view(),
+        name="view_one_application"
     )
 ]

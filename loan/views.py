@@ -328,7 +328,6 @@ class LoansView(MainView):
     
 class ViewOneLoan(MainView):
     def get(self, request, *args, **kwargs):
-        
         loan = Loan.objects.get(
             id=self.kwargs.get('loan')
         )
@@ -525,8 +524,29 @@ class ApproveLoanTask(MainView):
     
 class ReviewLoanInformation(MainView):
     def get(self, request, *args, **kwargs):
-        
-        return render(request, 'application/review_applicants_info.html')
+        loans = Loan.objects.filter(is_active=True, is_deleted=False, status=1)
+
+        context = {
+            'loans': loans
+        }
+        return render(request, 'application/submitted_loans.html', context)
+
+class ViewOneLoanApplication(MainView):
+    def get(self, request, *args, **kwargs):
+        loan_id = kwargs.get('loan')
+        print("------loan id")
+        print(loan_id)
+        try:
+            loan = Loan.objects.filter(id=loan_id).first()
+            print("---print the loan")
+            print(loan)
+        except Loan.DoesNotExist:
+            return HttpResponse("Loan not found", status=404)
+
+        context = {
+            'loan': loan
+        }
+        return render(request, 'application/review_loan.html', context)
     
 
     

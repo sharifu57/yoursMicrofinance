@@ -1,5 +1,5 @@
 {% extends 'auth_base.html' %}
-
+{% load static %}
 
 {% block content %}
 <div class="container">
@@ -10,7 +10,9 @@
                     <div class="row justify-content-center form-bg-image">
                         <div class="text-center text-md-center mb-0 mt-md-0">
                             <!-- <img class="align-center" src="" alt=""  style="height: 130px;"> -->
-                            <H3>LOGO HERE</H3>
+                            <div class="text-center text-md-center mb-0 mt-md-0">
+                                <img class="align-center" src="{% static 'logos/logo.png' %}" alt=""  style="height: 170px;">
+                            </div>
                         </div>
                         <div class="col-12 d-flex align-items-center justify-content-center">
                             <div class="bg-white shadow border-0  border-light p-4 p-lg-5 w-100 fmxw-500">
@@ -49,12 +51,12 @@
                                     </div>
                                     <!-- {{form.errors}} -->
                                     <div class="d-grid">
-                                        <button type="submit" name="submit" class="btn" style="border-radius: 0px; background-color: rgb(247, 185, 0);">Log In</button>
+                                        <button type="submit" name="submit" class="btn text-bold" style="border-radius: 0px; background-color: #231F20; color: white;">Log In</button>
                                     </div>
                                 </form>
                                 
                                 {% if form.non_field_errors %}
-                                    <div class="alert alert-danger">
+                                    <div class="alert alert-danger"> 
                                         {% for error in form.non_field_errors %}
                                             <p>{{ error }}</p>
                                         {% endfor %}
