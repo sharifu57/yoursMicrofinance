@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<div class="container pt-3" style="height: 100vh">
+    <div class="card card-default">
+        <div class="card-header">
+            <h5>Personal Information</h5>
+        </div>
+        <div class="card-body">
+            <form action="{% url 'register_new_customer'  %}" method="post" enctype="multipart/form-data" novalidate>
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="exampleInputIconPassword" style="font-size: 12px">First Name</label>
+                        <div class="input-group">
+                            <input type="text" name="first_name" class="form-control" id="exampleInputIconPassword" placeholder="First firstName" required/>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="exampleInputIconPassword" style="font-size: 12px">Middle Name</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="middle_name" id="exampleInputIconPassword" placeholder="Middle Name" aria-label="Password" required>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="exampleInputIconPassword" style="font-size: 12px">Last Name</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="last_name" id="exampleInputIconPassword" placeholder="Last Name" aria-label="Password" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="exampleInputIconPassword" style="font-size: 12px">Phone Number</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" name="phone" id="exampleInputIconPassword" placeholder="Phone" aria-label="Password" required>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="exampleInputIconPassword" style="font-size: 12px">Email</label>
+                        <div class="input-group">
+                            <input type="email" class="form-control" name="email" id="exampleInputIconPassword" placeholder="Email" aria-label="Password" required>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="birthday" style="font-size: 12px">Date Of Birth</label>
+                        <div class="input-group">
+                            <input data-datepicker="" name="date_of_birth" class="form-control" id="birthday" type="date" format="%Y-%m-%d" placeholder="dd/mm/yyyy" required>                                               
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="exampleInputIconPassword" style="font-size: 12px">Nida Number</label>
+                        <div class="input-group">
+                            <input type="number" name="nida_number" class="form-control" id="exampleInputIconPassword" placeholder="Nida" aria-label="Password" required oninput="limitInputLength(this, 20)">
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="exampleInputIconPassword" style="font-size: 12px">Address</label>
+                        <div class="input-group">
+                            <input type="text" name="address" class="form-control" id="exampleInputIconPassword" placeholder="Password" aria-label="Password" required>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="exampleInputIconPassword" style="font-size: 12px">Image</label>
+                        <input class="form-control" name="picture" type="file" id="formFile" required> 
+                    </div>
+                </div>
+                <div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault" name="confirm">Accepted to create</label>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-sm">Submit Form</button>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="pt-3">
+
+</div>
+{% endblock content %}
+
+{% block scripts %}
+
+<script>
+    function limitInputLength(input, maxLength) {
+        if (input.value.length > maxLength) {
+            input.value = input.value.slice(0, maxLength);
+        }
+    }
+</script>
+            
+{% endblock scripts %}
+

@@ -76,10 +76,13 @@ class LoginView(View):
 class DashboardView(MainView):
     def get(self, request, *args, **kwargs):
         title = "Dashboard OverView"
-        identity_number = None
+        identity_number = 0
+        revenue_amount = 0
+        loan_sum = 0
         
-        loan_sum = Loan.objects.aggregate(total=Sum('amount'))
-        interest_amount = Loan.objects.aggregate(total=Sum('interest_amount'))
+        active_loans = Loan.objects.filter(is_active=True, is_deleted=False, status__in=[6,8])
+        loan_sum = active_loans.aggregate(total=Sum('amount'))
+        interest_amount = active_loans.aggregate(total=Sum('interest_amount'))
         borrowers = Borrower.objects.filter(is_active=True, is_deleted=False)
         
         if borrowers:
@@ -88,8 +91,8 @@ class DashboardView(MainView):
                     borrower.identity = generate_unique_numbers()
                     borrower.save()
                     
-        
-        revenue_amount = loan_sum['total'] + interest_amount['total']
+        if loan_sum['total'] is not None and interest_amount['total'] is not None:
+            revenue_amount = loan_sum['total'] + interest_amount['total']
         
         members = Borrower.objects.all().count()
         
@@ -114,7 +117,7 @@ class DashboardView(MainView):
             'title': title,
             'revenue_amount': revenue_amount,
             'members': members,
-            'loan_sum': loan_sum,
+            'loan_sum': loan_sum if loan_sum is not None else 0,
             'interest_amount': interest_amount,
             'loan_data': loan_json,
             'payment_data': payment_json
@@ -547,6 +550,51 @@ class ViewOneLoanApplication(MainView):
             'loan': loan
         }
         return render(request, 'application/review_loan.html', context)
+    
+
+class SelectCustomer(MainView):
+    def get(self, request, *args, **kwargs):
+        
+        return render(request, 'application/select_customer.html',)
+    
+class RegisterNewCustomer(MainView):
+    def get(self, request, *args, **kwargs):
+        
+        return render(request, 'application/register_new_customer.html')
+    
+    def post(self, request, *args, **kwargs):
+        form = LoanBorrowerForm(
+            request.POST
+        )
+        
+        if form.is_valid():
+            print("-----a valid form")
+            borrower = Borrower()
+            borrower.first_name = request.POST['first_name']
+            borrower.last_name = request.POST['last_name']
+            borrower.middle_name = request.POST['middle_name']
+            borrower.email = request.POST['email']
+            borrower.phone = request.POST['phone']
+            borrower.nida_number = request.POST['nida_number']
+            borrower.address = request.POST['address']
+            borrower.date_of_birth = request.POST['date_of_birth']
+            # borrower.nature_of_employment = request.POST['nature_of_employment']
+            borrower.picture = request.FILES['picture']
+            borrower.created_by = request.user
+            borrower.identity = generate_unique_numbers()
+           
+            borrower.save()  
+            borrower.refresh_from_db()
+            print(borrower)  
+            print("*****success")
+            
+        else:
+            print("*****error")
+            
+        context = {
+            'form': form
+        }
+        return render(request, 'application/register_new_customer.html', context)
     
 
     

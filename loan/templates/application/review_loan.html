@@ -10,10 +10,99 @@
                 <h5>{{loan.borrower.first_name}} Application</h5>
             </div>
             <div class="card-body">
-                <div>
-                    <p style="font-size: 12px">PERSONAL INFORMATION</p>
-                    <div>
-                        First Name: {{loan.borrower.first_name}}
+                <div class="row">
+                    <div class="col-md-8">
+                        <div>
+                            <p style="font-size: 12px">PERSONAL INFORMATION</p>
+                            <div>
+                                <span style="font-size: 10px">First Name:</span> <span style="font-weight: 500">{{loan.borrower.first_name}}</span>
+                            </div>
+
+                            <div class="pt-2">
+                                <span style="font-size: 10px">Last Name:</span> <span style="font-weight: 500">{{loan.borrower.last_name}}</span>
+                            </div>
+
+                            <div class="pt-2">
+                                <span style="font-size: 10px">Mobile Number:</span> <span style="font-weight: 500">{{loan.borrower.phone}}</span>
+                            </div>
+
+                            <div class="pt-2">
+                                <span style="font-size: 10px">Nida Number:</span> <span style="font-weight: 500">{{loan.borrower.nida_number}}</span>
+                            </div>
+
+                            <div class="pt-2">
+                                <span style="font-size: 10px">Nature of Activity:</span> <span style="font-weight: 500">
+                                    {% if loan.borrower.nature_of_employment == 1 %}
+                                        Employed
+                                    {% else %}
+                                        Not Employed
+                                    {% endif %}
+                                        
+                                </span>
+                            </div>
+                        </div>
+                        <hr>
+                        <div>
+                            <p style="font-size: 12px">LOAN INFORMATION</p>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div>
+                                        <span style="font-size: 10px">Loan Category:</span> <span style="font-weight: 500">{{loan.category.category_name}}</span>
+                                    </div>
+                                    <div>
+                                        <span style="font-size: 10px">Loan Amount:</span> <span style="font-weight: 500">{{loan.amount}} Tzs</span>
+                                    </div>
+                                    <div>
+                                        <span style="font-size: 10px">Interest Rate:</span> <span style="font-weight: 500">{{loan.interest_rate}} Tzs</span>
+                                    </div>
+                                    <div>
+                                        <span style="font-size: 10px">Total Return Amount:</span> <span style="font-weight: 500">{{loan.total_interest_amount}} Tzs</span>
+                                    </div>
+                                    <div>
+                                        <span style="font-size: 10px">Start From:</span> <span style="font-weight: 500">{{loan.start_date}}</span>
+                                    </div>
+                                    <div>
+                                        <span style="font-size: 10px">End:</span> <span style="font-weight: 500">{{loan.end_date}}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div>
+                                        <span style="font-size: 10px">Repayment Term:</span>
+                                         <span style="font-weight: 500"> 
+                                            {% if loan.repayment_term == 1 %}
+                                                <p>1 Month</p>
+                                            {% elif loan.repayment_term == 2 %}
+                                                <p>3 Months</p>
+                                            {% elif loan.repayment_term == 3 %}
+                                                <p>6 Months</p>
+                                            {% elif loan.repayment_term == 4 %}
+                                                <p>1 Year</p>
+                                            {% else %}
+                                                <p>Nothing</p>
+                                            {% endif %}     
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <span style="font-size: 10px">Payment Frequency:</span>
+                                         <span style="font-weight: 500"> 
+                                            {% if loan.payment_frequency == 1 %}
+                                                <p>Weekly</p>
+                                            {% elif loan.payment_frequency == 2 %}
+                                                <p>Bi Weekly</p>
+                                            {% elif loan.payment_frequency == 3 %}
+                                                <p>Monthly</p>
+                                            {% else %}
+                                                <p>Nothing</p>
+                                            {% endif %}     
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 float-right">
+                        <button type="button" class="btn btn-danger btn-sm">Reject</button>
+                        <button type="button" class="btn btn-success btn-sm">Approve</button>
                     </div>
                 </div>
             </div>

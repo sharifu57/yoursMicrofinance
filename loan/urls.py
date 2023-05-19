@@ -91,5 +91,15 @@ urlpatterns = [
         'view_one_application/<int:loan>/',
         views.ViewOneLoanApplication.as_view(),
         name="view_one_application"
+    ),
+    path(
+        'select_customer',
+        views.SelectCustomer.as_view(),
+        name="select_customer"
+    ),
+    path(
+        'register_new_customer',
+        views.RegisterNewCustomer.as_view(),
+        name="register_new_customer"
     )
 ]

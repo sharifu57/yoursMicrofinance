@@ -86,7 +86,6 @@ class LoanBorrowerForm(forms.ModelForm):
             'nida_number',
             'address',
             'date_of_birth',
-            'nature_of_employment',
             'picture',
             
         ]

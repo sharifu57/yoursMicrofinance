@@ -19,9 +19,12 @@
                             </div>
                             <div class="pt-5">
                                 <div class="text-right">
-                                    <a href="javascript:" data-href="{% url 'create_new_loan' %}" class="new-loan-link">
-                                        <button class="btn btn-primary me-md-2" type="button" style="border-radius: 20px;">Create New Loan</button>
+                                    <a href="javascript:" data-href="{% url 'select_customer' %}" class="customer-link">
+                                        <button class="btn btn-primary me-md-2" type="button" style="border-radius: 20px;">SELECT A BORROWER</button>
                                     </a>
+                                    {% comment %} <a href="javascript:" data-href="{% url 'create_new_loan' %}" class="new-loan-link">
+                                        <button class="btn btn-primary me-md-2" type="button" style="border-radius: 20px;">Create New Loan</button>
+                                    </a> {% endcomment %}
                                 </div>
                             </div>
                         </div>
@@ -145,6 +148,17 @@
 <!-- <script src="{% static 'assets/borrower/add_borrower.js' %}"></script> -->
     <script src="/static/assets/js/helpers.js"></script>
     <script>
+        $(function(){
+            $(document).on('click', '.customer-link', function() {
+            let url = $(this).data('href');
+            let title = "SELECT ONE CHOICE";   
+            let columnClass = "col-md-5"
+            let formSelector = ".create-new-loan-form"
+            let containerFluid = false
+
+            ajaxPost(title, url, columnClass, containerFluid, formSelector);
+            })
+        });
         $(function(){
             $(document).on('click', '.new-loan-link', function() {
             let url = $(this).data('href');
