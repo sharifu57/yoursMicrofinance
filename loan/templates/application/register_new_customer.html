@@ -2,8 +2,23 @@
 {% load static %}
 {% load humanize %}
 
+{% block stylesheets %}
+
+{% endblock stylesheets %}
+
+
 {% block content %}
 <div class="container pt-3" style="height: 100vh">
+    {% if messages %}
+        <div class="alert-container" style="position: fixed; top: 50%; right: 20px; transform: translateY(-50%); z-index: 9999; transition: opacity 0.5s;">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}" style="margin-bottom: 10px;">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
     <div class="card card-default">
         <div class="card-header">
             <h5>Personal Information</h5>
@@ -17,38 +32,70 @@
                         <div class="input-group">
                             <input type="text" name="first_name" class="form-control" id="exampleInputIconPassword" placeholder="First firstName" required/>
                         </div>
+                        
+                        {% if form.first_name.errors %}
+                            <div class="text-danger">
+                                <p class="text">{{ form.first_name.errors }}</p>
+                            </div>
+                        {% endif %}
+                            
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="exampleInputIconPassword" style="font-size: 12px">Middle Name</label>
                         <div class="input-group">
                             <input type="text" class="form-control" name="middle_name" id="exampleInputIconPassword" placeholder="Middle Name" aria-label="Password" required>
                         </div>
+                        {% if form.middle_name.errors %}
+                            <div class="text-danger">
+                                <p class="text">{{ form.middle_name.errors }}</p>
+                            </div>
+                        {% endif %}
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="exampleInputIconPassword" style="font-size: 12px">Last Name</label>
                         <div class="input-group">
                             <input type="text" class="form-control" name="last_name" id="exampleInputIconPassword" placeholder="Last Name" aria-label="Password" required>
                         </div>
+                        {% if form.last_name.errors %}
+                            <div class="text-danger">
+                                <p class="text">{{ form.last_name.errors }}</p>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-4 mb-3">
                         <label for="exampleInputIconPassword" style="font-size: 12px">Phone Number</label>
                         <div class="input-group">
-                            <input type="number" class="form-control" name="phone" id="exampleInputIconPassword" placeholder="Phone" aria-label="Password" required>
+                            <input type="number" class="form-control" name="phone" id="exampleInputIconPassword" placeholder="07xxxxxxxx" aria-label="Password" required oninput="limitInputPhoneLength(this, 10)">
                         </div>
+                        {% if form.phone.errors %}
+                            <div class="text-danger">
+                                <p class="text">{{ form.phone.errors }}</p>
+                            </div>
+                        {% endif %}
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="exampleInputIconPassword" style="font-size: 12px">Email</label>
                         <div class="input-group">
                             <input type="email" class="form-control" name="email" id="exampleInputIconPassword" placeholder="Email" aria-label="Password" required>
                         </div>
+                        {% if form.email.errors %}
+                            <div class="text-danger">
+                                <p class="text">{{ form.email.errors }}</p>
+                            </div>
+                        {% endif %}
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="birthday" style="font-size: 12px">Date Of Birth</label>
                         <div class="input-group">
                             <input data-datepicker="" name="date_of_birth" class="form-control" id="birthday" type="date" format="%Y-%m-%d" placeholder="dd/mm/yyyy" required>                                               
                         </div>
+                        {% if form.date_of_birth.errors %}
+                            <div class="text-danger">
+                                <p class="text">{{ form.date_of_birth.errors }}</p>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="row">
@@ -63,10 +110,20 @@
                         <div class="input-group">
                             <input type="text" name="address" class="form-control" id="exampleInputIconPassword" placeholder="Password" aria-label="Password" required>
                         </div>
+                        {% if form.address.errors %}
+                            <div class="text-danger">
+                                <p class="text">{{ form.address.errors }}</p>
+                            </div>
+                        {% endif %}
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="exampleInputIconPassword" style="font-size: 12px">Image</label>
                         <input class="form-control" name="picture" type="file" id="formFile" required> 
+                        {% if form.picture.errors %}
+                            <div class="text-danger">
+                                <p class="text">{{ form.picture.errors }}</p>
+                            </div>
+                    {% endif %}
                     </div>
                 </div>
                 <div>
@@ -93,6 +150,48 @@
             input.value = input.value.slice(0, maxLength);
         }
     }
+
+    function limitInputPhoneLength(input, maxLength) {
+        if (input.value.length > maxLength) {
+            input.value = input.value.slice(0, maxLength);
+        }
+    }
+
+    document.getElementById('notifyTopRight').addEventListener('click', function () {
+        const notyf = new Notyf({
+            position: {
+                x: 'right',
+                y: 'top',
+            },
+            types: [
+                {
+                    type: 'error',
+                    background: '#FA5252',
+                    icon: {
+                        className: 'fas fa-times',
+                        tagName: 'span',
+                        color: '#fff'
+                    },
+                    dismissible: false
+                }
+            ]
+        });
+        notyf.open({
+            type: 'error',
+            message: 'This action is not allowed.'
+        });
+    });
+
+    setTimeout(function() {
+        var alertContainer = document.querySelector('.alert-container');
+        if (alertContainer) {
+            alertContainer.style.opacity = '0';
+            setTimeout(function() {
+                alertContainer.style.display = 'none';
+            }, 1000); // 1000ms = 1 second
+        }
+    }, 1000); // 1000ms = 1 second
+
 </script>
             
 {% endblock scripts %}

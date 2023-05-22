@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block stylesheets %}
+
+{% endblock stylesheets %}
+
+
+{% block content %}
+<div class="container pt-3" style="height: 100vh">
+    {% comment %} {% if messages %}
+        <div class="alert-container" style="position: fixed; top: 50%; right: 20px; transform: translateY(-50%); z-index: 9999; transition: opacity 0.5s;">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}" style="margin-bottom: 10px;">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %} {% endcomment %}
+
+    <div class="card card-default">
+        <div class="card-header">
+            <h5>Loan Information</h5>
+        </div>
+        <div class="card-body">
+            <form class="create-new-loan-form" action="{% url 'create_new_loan'  %}" method="post" enctype="multipart/form-data" novalidate>
+                {% csrf_token %}
+                {% load widget_tweaks %}
+            
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="">Select Client</label>
+                                {% render_field form.borrower class="form-control" style="border-radius: 20px" %}
+
+                                {% if form.borrower.errors %}
+                                    <div class="text-danger">
+                                        <p class="text">{{ form.borrower.errors }}</p>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% comment %} <div class="col-md-12 pt-3">
+                            <div class="form-group">
+                                <label for="">Category</label>
+                                {% render_field form.category class="form-control" style="border-radius: 20px" %}
+                                <span class="text-danger">{{ form.category.errors }}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-12 pt-3">
+                            <div class="form-group">
+                                <label for="">Amount</label>
+                                {% render_field form.amount class="form-control" type="number" style="border-radius: 20px" %}
+                                <span class="text-danger">{{ form.amount.errors }}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-12 pt-3">
+                            <div class="form-group">
+                                <label for="">Payment Term</label>
+                                {% render_field form.repayment_term class="form-control" style="border-radius: 20px" %}
+                                <span class="text-danger">{{ form.repayment_term.errors }}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-12 pt-3">
+                            <div class="form-group">
+                                <label for="">Payment Frequency</label>
+                                {% render_field form.payment_frequency class="form-control" style="border-radius: 20px" %}
+                                <span class="text-danger">{{ form.payment_frequency.errors }}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-12 pt-3">
+                            <div class="form-group">
+                                <label for="">Start From</label>
+                                {% render_field form.start_date class="form-control" type="date" format="%Y-%m-%d" style="border-radius: 20px" %}
+                                <span class="text-danger">{{ form.start_date.errors }}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-12 pt-3">
+                            <div class="form-group">
+                                <label for="">Document(Barua ya Mjumbe)</label>
+                                {% render_field form.document class="form-control" style="border-radius: 20px" %}
+                                <span class="text-danger">{{ form.document.errors }}</span>
+                            </div>
+                        </div> {% endcomment %}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}

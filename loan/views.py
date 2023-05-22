@@ -19,6 +19,7 @@ from django.core.paginator import Paginator
 from django.contrib.postgres.search import SearchVector
 from loan.flow import *
 from viewflow.activation import Activation
+from django.contrib import messages
 
 # Create your views here.
 
@@ -587,14 +588,95 @@ class RegisterNewCustomer(MainView):
             borrower.refresh_from_db()
             print(borrower)  
             print("*****success")
+            messages.success(request, 'Registration successful!')
             
         else:
             print("*****error")
-            
+            messages.error(request, 'Registration failed. Please correct the errors.')
         context = {
             'form': form
         }
         return render(request, 'application/register_new_customer.html', context)
+    
+
+class StartNewLoanView(MainView):
+    def get(self, request, *args, **kwargs):
+        form = LoanApplicationForm()
+        
+        context = {
+            'form': form
+        }
+        return render(request, 'application/start_new_loan.html', context)
+    
+    def post(self, request, *args, **kwargs):
+        interest_rate = 30
+        new_date = None
+        form = LoanApplicationForm(
+            request.POST
+        )
+        
+        borrower_id = request.POST.get('borrower', None)
+        category_id = request.POST.get('category', None)
+ 
+        if form.is_valid():
+            loan = Loan()
+            loan.amount = request.POST['amount']
+            if borrower_id:
+                loan.borrower = Borrower.objects.get(id=borrower_id)
+            else:
+                pass
+                
+            if category_id:
+                loan.category = LoanCategory.objects.get(id=category_id)
+            else:
+                pass
+            loan.repayment_term = request.POST['repayment_term']
+            loan.payment_frequency = request.POST['payment_frequency']
+            loan.start_date = request.POST['start_date']
+            if loan.start_date:
+                start_date = loan.start_date
+                if loan.repayment_term == "1":
+                    loan.end_date = pendulum.parse(loan.start_date).add(months=1).to_date_string()
+                    
+                if loan.repayment_term == "2":
+                    loan.end_date = pendulum.parse(loan.start_date).add(months=3).to_date_string()
+                    
+                if loan.repayment_term == "3":
+                    loan.end_date = pendulum.parse(loan.start_date).add(months=6).to_date_string()
+                    
+                if loan.repayment_term == "4":
+                    loan.end_date = pendulum.parse(loan.start_date).add(years=1).to_date_string()
+                    
+                else:
+                    pass
+            else:
+                loan.start_date = pendulum.today().to_date_string()
+            loan.document = request.FILES['document']
+            loan.created_by = request.user
+            loan.interest_amount = float(loan.amount) * (interest_rate/100)
+            
+
+            loan.save()
+            loan.refresh_from_db()
+            
+            info = {
+                "status":True,
+                "message": "Success created"
+            }
+            
+            return HttpResponse(json.dumps(info))
+        
+        else:
+            form = LoanBorrowerForm()
+            info = {
+                "status": False,
+                "message": "Failed to Create"
+            }
+            
+            return HttpResponse(json.dumps(info))
+    
+
+
     
 
     

@@ -101,5 +101,10 @@ urlpatterns = [
         'register_new_customer',
         views.RegisterNewCustomer.as_view(),
         name="register_new_customer"
+    ),
+    path(
+        'start_new_loan',
+        views.StartNewLoanView.as_view(),
+        name="start_new_loan"
     )
 ]

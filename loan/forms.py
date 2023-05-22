@@ -7,6 +7,8 @@ from loan.models import *
 from django.contrib.auth.forms import AuthenticationForm
 import random
 from django_select2.forms import Select2MultipleWidget  
+import pendulum
+from datetime import date, timedelta
 
 class AuthenticationForm(forms.ModelForm):
     username = forms.CharField(max_length=100, required=True)
@@ -65,6 +67,11 @@ class LoanApplicationForm(forms.ModelForm):
             'start_date',
             'document'
         ]
+    
+    def __init__(self, *args, **kwargs):
+        super(LoanApplicationForm, self).__init__(*args, **kwargs)
+        self.fields['borrower'].required = True
+        
         
     def clean(self):
         cleaned_data = super(LoanApplicationForm, self).clean()
@@ -81,6 +88,7 @@ class LoanBorrowerForm(forms.ModelForm):
         fields = [
             'first_name',
             'last_name',
+            'middle_name',
             'email',
             'phone',
             'nida_number',
@@ -94,19 +102,47 @@ class LoanBorrowerForm(forms.ModelForm):
         super(LoanBorrowerForm, self).__init__(*args, **kwargs)
         self.fields['first_name'].required = True
         self.fields['last_name'].required = True
+        self.fields['middle_name'].required = True
+        self.fields['email'].required = True
+        self.fields['phone'].required = True
+        self.fields['nida_number'].required = True
+        self.fields['address'].required = True
+        self.fields['date_of_birth'].required = True
+        self.fields['picture'].required = False
         
     
-    def clean(self, *args, **kwargs):
-        cleaned_data = self.cleaned_data
-        first_name = cleaned_data.get('first_name')
-        last_name = cleaned_data.get('last_name')
+    def clean_date_of_birth(self):
+        date_of_birth = self.cleaned_data.get('date_of_birth')
+        today  = date.today()
+        age_limit_today = today - timedelta(days=18 * 365)
         
-        if Borrower.objects.filter(first_name__iexact = first_name).exists():
-            raise forms.ValidationError("user Already exists")
-        if not last_name:
-            raise forms.ValidationError("this field is required")
-        else:
-            pass
+        if date_of_birth > age_limit_today:
+            raise forms.ValidationError("You must be at least 18 years old.")
+        return date_of_birth
+        
+    def clean_first_name(self):
+        first_name = self.cleaned_data.get("first_name")
+        
+        if Borrower.objects.filter(first_name__icontains=first_name).exists():
+            raise forms.ValidationError("This First Name already exists")
+    
+    def clean_last_name(self):
+        last_name = self.cleaned_data.get("last_name")
+        
+        if Borrower.objects.filter(first_name__icontains=last_name).exists():
+            raise forms.ValidationError("This Last Name already exists")
+    
+    def clean_email(self):
+        email = self.cleaned_data.get("email")
+        
+        if Borrower.objects.filter(email__icontains=email).exists():
+            raise forms.ValidationError("This Email already exists")
+        
+    def clean_nida_number(self):
+        nida_number = self.cleaned_data.get("nida_number")
+        
+        if len(nida_number) != 20:
+            raise forms.ValidationError("Nida Number must be at least 20 characters")
         
     
     def save(self, *args, **kwargs):
