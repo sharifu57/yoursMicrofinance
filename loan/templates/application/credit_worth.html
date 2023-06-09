@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="pt-3">
-    <h5>Loans</h5>
+    <h5>{{title}}</h5>
 </div>
 
 <div class="card card-default">
@@ -43,14 +43,14 @@
                     <th scope="col">From</th>
                     <th scope="col">To</th>
                     <th scope="col">Status</th>
-                    <th scope="col">Action</th>
+                    <th scope="col">Review</th>
 
                   </tr>
                 </thead>
                 <tbody>
-                    
+
                     {% if loans %}
-                        
+
                         {% for loan in loans %}
                             <tr>
                                 <td>{{ forloop.counter }}</td>
@@ -69,40 +69,31 @@
                                     {% endif %}
                                 </td>
                                 <td>
-                                  <div class="btn-group">
-                                      <a href="" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                          <i class="fab fa-schlix"></i>
-                                      </a>
-                                      <div class="dropdown-menu">
-                                          <a class="dropdown-item" href="{% url 'loan' loan.id %}">View Loan</a>
-                                          <a class="dropdown-item" href="#">Another action</a>
-                                          <a class="dropdown-item" href="#">Something else here</a>
-                                          <div class="dropdown-divider"></div>
-                                          <a class="dropdown-item" href="#">Separated link</a>
-                                      </div>
-                                    </div>
+                                  <a href="{% url 'view_one_application' loan.id %}">
+                                      <button class="btn btn-primary">
+                                        Review Loan
+                                      </button>
+                                  </a>
                                 </td>
                             </tr>
                         {% endfor %}
-                            
+
                     {% else %}
                         <tr id="not-bills-table-items">
                             <td colspan="10">
                                 <div class="alert alert-info text-center">
-                                    <h3>No Loans Found ...</h3>
+                                    <h3>No New Loans Found ...</h3>
                                 </div>
                             </td>
                         </tr>
                     {% endif %}
-                        
+
                 </tbody>
             </table>
         </div>
         <div class="card-footer">
-          {% if loans %}
-              {% include "common/paginator.html" with paging=loans page_obj=loans %}
-          {% endif %}
-        </div>
+
+      </div>
     </div>
 </div>
 {% endblock content %}

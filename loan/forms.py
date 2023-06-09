@@ -70,7 +70,7 @@ class LoanApplicationForm(forms.ModelForm):
     
     def __init__(self, *args, **kwargs):
         super(LoanApplicationForm, self).__init__(*args, **kwargs)
-        self.fields['borrower'].required = True
+        self.fields['borrower'].queryset = Borrower.objects.filter(is_active=True, is_deleted=False).order_by('first_name')
         
         
     def clean(self):

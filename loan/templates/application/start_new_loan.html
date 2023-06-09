@@ -33,7 +33,14 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="">Select Client</label>
-                                {% render_field form.borrower class="form-control" style="border-radius: 20px" %}
+                                <select class="form-select" aria-label="Disabled select example" data-live-search="true">
+                                    <option selected>Open this select menu</option>
+                                    <option value="1">One</option>
+                                    <option value="2">Two</option>
+                                    <option value="3">Three</option>
+                                </select>
+                                  
+                                  
 
                                 {% if form.borrower.errors %}
                                     <div class="text-danger">
@@ -42,48 +49,6 @@
                                 {% endif %}
                             </div>
                         </div>
-                        {% comment %} <div class="col-md-12 pt-3">
-                            <div class="form-group">
-                                <label for="">Category</label>
-                                {% render_field form.category class="form-control" style="border-radius: 20px" %}
-                                <span class="text-danger">{{ form.category.errors }}</span>
-                            </div>
-                        </div>
-                        <div class="col-md-12 pt-3">
-                            <div class="form-group">
-                                <label for="">Amount</label>
-                                {% render_field form.amount class="form-control" type="number" style="border-radius: 20px" %}
-                                <span class="text-danger">{{ form.amount.errors }}</span>
-                            </div>
-                        </div>
-                        <div class="col-md-12 pt-3">
-                            <div class="form-group">
-                                <label for="">Payment Term</label>
-                                {% render_field form.repayment_term class="form-control" style="border-radius: 20px" %}
-                                <span class="text-danger">{{ form.repayment_term.errors }}</span>
-                            </div>
-                        </div>
-                        <div class="col-md-12 pt-3">
-                            <div class="form-group">
-                                <label for="">Payment Frequency</label>
-                                {% render_field form.payment_frequency class="form-control" style="border-radius: 20px" %}
-                                <span class="text-danger">{{ form.payment_frequency.errors }}</span>
-                            </div>
-                        </div>
-                        <div class="col-md-12 pt-3">
-                            <div class="form-group">
-                                <label for="">Start From</label>
-                                {% render_field form.start_date class="form-control" type="date" format="%Y-%m-%d" style="border-radius: 20px" %}
-                                <span class="text-danger">{{ form.start_date.errors }}</span>
-                            </div>
-                        </div>
-                        <div class="col-md-12 pt-3">
-                            <div class="form-group">
-                                <label for="">Document(Barua ya Mjumbe)</label>
-                                {% render_field form.document class="form-control" style="border-radius: 20px" %}
-                                <span class="text-danger">{{ form.document.errors }}</span>
-                            </div>
-                        </div> {% endcomment %}
                     </div>
                 </div>
             </form>
@@ -91,3 +56,11 @@
     </div>
 </div>
 {% endblock content %}
+
+{% block script %}
+    <script>
+        $(document).ready(function() {
+            $('#mySelect').selectpicker();
+        });
+    </script>
+{% endblock script %}

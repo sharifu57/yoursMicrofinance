@@ -4,6 +4,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.fields import GenericRelation
 from django.conf import settings
+from river.models.fields.state import StateField
+
 
 # Create your models here.
 class MainModel(models.Model):
@@ -97,6 +99,13 @@ REPAYMENT_TERM = (
     (4, '1 Year')
 )
 
+LOAN_STATES = (
+    ("pending", "Pending"),
+    ("approved", "Approved"),
+    ("rejected", "Rejected"),
+    ("completed", "Completed"),
+)
+
 class Loan(MainModel):
     borrower = models.ForeignKey('loan.borrower', on_delete=models.CASCADE, null=True, blank=True)
     category = models.ForeignKey("loan.loanCategory", on_delete=models.SET_NULL, null=True, blank=True)
@@ -111,11 +120,22 @@ class Loan(MainModel):
     end_date = models.DateTimeField(null=True,blank=True)
     total_interest_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     status = models.IntegerField(choices=LOAN_STATUS, null=True, blank=True, default=1)
+    state = StateField()
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         
         return f"{Borrower.first_name}"
+    
+    # state transitions method
+    def approve(self):
+        self.state.transition("approved")
+
+    def reject(self):
+        self.state.transition("rejected")
+
+    def complete(self):
+        self.state.transition("completed")
     
 
 

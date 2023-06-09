@@ -101,8 +101,15 @@
                         </div>
                     </div>
                     <div class="col-md-4 float-right">
-                        <button type="button" class="btn btn-danger btn-sm">Reject</button>
-                        <button type="button" class="btn btn-success btn-sm">Approve</button>
+                        <a href="javascript:" data-href="{% url 'proceed_to_credit_review' loan.id %}" class="proceed-to-credit-link">
+                            <button type="button" class="btn btn-primary btn-sm">Approve</button>
+                        </a>
+                        {% comment %} <a href="">
+                            <button type="button" class="btn btn-danger btn-sm">Reject</button>
+                        </a>
+                        <a href="">
+                            <button type="button" class="btn btn-success btn-sm">Approve</button>
+                        </a> {% endcomment %}
                     </div>
                 </div>
             </div>
@@ -110,3 +117,18 @@
     </div>
 </div>
 {% endblock content %}
+
+
+{% block scripts %}
+    <script src="/static/assets/js/helpers.js"></script>
+    <script>
+        $(document).on("click", ".proceed-to-credit-link", function (e) {
+            e.preventDefault();
+            let title = "Approve";
+            let url = $(this).data('href');
+            let content = "Are you Sure?";
+            
+            ajaxConfirm(title, url, content);
+        });
+    </script>
+{% endblock scripts %}

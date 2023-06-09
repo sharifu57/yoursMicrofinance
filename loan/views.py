@@ -20,7 +20,7 @@ from django.contrib.postgres.search import SearchVector
 from loan.flow import *
 from viewflow.activation import Activation
 from django.contrib import messages
-
+from django.db.models import Q
 # Create your views here.
 
 class MainView(View):
@@ -77,25 +77,10 @@ class LoginView(View):
 class DashboardView(MainView):
     def get(self, request, *args, **kwargs):
         title = "Dashboard OverView"
-        identity_number = 0
-        revenue_amount = 0
-        loan_sum = 0
-        
-        active_loans = Loan.objects.filter(is_active=True, is_deleted=False, status__in=[6,8])
-        loan_sum = active_loans.aggregate(total=Sum('amount'))
-        interest_amount = active_loans.aggregate(total=Sum('interest_amount'))
-        borrowers = Borrower.objects.filter(is_active=True, is_deleted=False)
-        
-        if borrowers:
-            for borrower in borrowers:
-                if borrower.identity is None:
-                    borrower.identity = generate_unique_numbers()
-                    borrower.save()
-                    
-        if loan_sum['total'] is not None and interest_amount['total'] is not None:
-            revenue_amount = loan_sum['total'] + interest_amount['total']
-        
-        members = Borrower.objects.all().count()
+        loans = Loan.objects.filter(is_active=True, is_deleted=False)
+        total_loan_amount = loans.aggregate(total=Sum('amount'))
+        total_interest_amount = loans.aggregate(total=Sum('interest_amount'))
+        revenue_amount = total_loan_amount['total'] + total_interest_amount['total']
         
         loan_data = Loan.objects.values('amount', 'borrower__first_name').order_by('-created')[:6]
         payment_data = LoanPayment.objects.values('payment_amount', 'loan__amount').order_by('-created')[:6]
@@ -112,19 +97,51 @@ class DashboardView(MainView):
             default=str
         )
         
-        print("****payment json")
-        print(payment_json)
+        
         context = {
-            'title': title,
-            'revenue_amount': revenue_amount,
-            'members': members,
-            'loan_sum': loan_sum if loan_sum is not None else 0,
-            'interest_amount': interest_amount,
+            "loan_sum": total_loan_amount if total_loan_amount else 0.00,
+            "interest_amount": total_interest_amount if total_interest_amount else 0.00,
+            "revenue_amount": revenue_amount,
             'loan_data': loan_json,
             'payment_data': payment_json
         }
-        
         return render(request, 'home/dashboard.html', context)
+        # title = "Dashboard OverView"
+        # identity_number = 0
+        # revenue_amount = 0
+        # loan_sum = 0
+        
+        # active_loans = Loan.objects.filter(is_active=True, is_deleted=False, status__in=[6,8])
+        # loan_sum = active_loans.aggregate(total=Sum('amount'))
+        # interest_amount = active_loans.aggregate(total=Sum('interest_amount'))
+        # borrowers = Borrower.objects.filter(is_active=True, is_deleted=False)
+        
+        # if borrowers:
+        #     for borrower in borrowers:
+        #         if borrower.identity is None:
+        #             borrower.identity = generate_unique_numbers()
+        #             borrower.save()
+                    
+        # if loan_sum['total'] is not None and interest_amount['total'] is not None:
+        #     revenue_amount = loan_sum['total'] + interest_amount['total']
+        
+        # members = Borrower.objects.all().count()
+        
+        
+        
+        # print("****payment json")
+        # print(payment_json)
+        # context = {
+        #     'title': title,
+        #     'revenue_amount': revenue_amount,
+        #     'members': members,
+        #     'loan_sum': loan_sum if loan_sum is not None else 0,
+        #     'interest_amount': interest_amount,
+        #     'loan_data': loan_json,
+        #     'payment_data': payment_json
+        # }
+        
+        # return render(request, 'home/dashboard.html', context)
         
 
 class LoanBookView(MainView):
@@ -614,15 +631,22 @@ class StartNewLoanView(MainView):
         form = LoanApplicationForm(
             request.POST
         )
-        
+        search_query = request.POST.get('search_query', '')
         borrower_id = request.POST.get('borrower', None)
         category_id = request.POST.get('category', None)
  
         if form.is_valid():
             loan = Loan()
             loan.amount = request.POST['amount']
+            
+            borrower_qs = Borrower.objects.filter(
+                Q(first_name__icontains=search_query) |  # Search by name (replace 'name' with the actual field name)
+                Q(email__icontains=search_query)  # Search by email (replace 'email' with the actual field name)
+                # Add more fields to search against as needed
+            )
+            
             if borrower_id:
-                loan.borrower = Borrower.objects.get(id=borrower_id)
+                loan.borrower = borrower_qs.get(id=borrower_id)
             else:
                 pass
                 
@@ -630,6 +654,7 @@ class StartNewLoanView(MainView):
                 loan.category = LoanCategory.objects.get(id=category_id)
             else:
                 pass
+            
             loan.repayment_term = request.POST['repayment_term']
             loan.payment_frequency = request.POST['payment_frequency']
             loan.start_date = request.POST['start_date']
@@ -675,10 +700,34 @@ class StartNewLoanView(MainView):
             
             return HttpResponse(json.dumps(info))
     
+class CreditWorthReview(MainView):
+    def get(self, request, *args, **kwargs):
+        context = list()
+        loan = Loan.objects.get(id=self.kwargs.get("loan"))
+        print(loan)
+        loan.status = 3
+        loan.save()
+        loan.refresh_from_db()
+        
+        info = {
+            "status": True,
+            "message": "Success Forwarded for Credit Review"
+        }
+        
+        response = redirect('credit_worth_loan')
+        response['data'] = info
+        return HttpResponse(json.dumps(info))   
 
-
-    
-
+class CreditWorthView(MainView):
+    def get(self, request, *args, **kwargs):
+        title = "Credit Worth Review"
+        loans = Loan.objects.filter(is_active=True, is_deleted=False, status=3)
+        
+        context = {
+            "title": title,
+            "loans": loans
+        }
+        return render(request,'application/credit_worth.html', context)
     
 
 

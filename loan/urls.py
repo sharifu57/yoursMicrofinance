@@ -106,5 +106,17 @@ urlpatterns = [
         'start_new_loan',
         views.StartNewLoanView.as_view(),
         name="start_new_loan"
+    ),
+    path(
+        'proceed_to_credit_review/<int:loan>/',
+        views.CreditWorthReview.as_view(),
+        name="proceed_to_credit_review"
+    ),
+    path(
+        'credit_worth_loan/',
+        views.CreditWorthView.as_view(),
+        name="credit_worth_loan"
     )
+    # proceed_to_credit_review
+    # proceed_to_credit
 ]
